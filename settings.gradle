@@ -1,0 +1,3 @@
+rootProject.name = 'CafeTeria-Koisk'
+include "client"
+include "server"
