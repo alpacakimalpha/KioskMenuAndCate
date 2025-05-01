@@ -1,0 +1,23 @@
+plugins {
+    id 'java-library'
+}
+
+allprojects {
+    apply plugin : 'java-library'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        it.options.release.set(21)
+    }
+
+
+}
+

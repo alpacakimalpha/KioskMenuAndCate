@@ -1,0 +1,3 @@
+rootProject.name = "CafeTeria-Kiosk"
+include "client"
+include "server"
