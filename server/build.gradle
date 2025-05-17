@@ -1,0 +1,4 @@
+dependencies {
+    implementation(project(path: ':common'))
+    implementation("com.zaxxer:HikariCP:6.3.0")
+}

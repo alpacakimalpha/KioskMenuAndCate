@@ -1,17 +1,18 @@
 plugins {
     id 'java-library'
+    id 'com.gradleup.shadow' version '9.0.0-beta3'
 }
 
 allprojects {
     apply plugin : 'java-library'
-
+    apply plugin: 'com.gradleup.shadow'
     repositories {
         mavenCentral()
     }
 
     dependencies {
-        implementation("io.netty:netty-all:${project.netty_version}")
-        implementation("io.netty:netty-pkitesting:${project.netty_version}")
+
+//        implementation("io.netty:netty-pkitesting:${project.netty_version}")
     }
 
     tasks.withType(JavaCompile).configureEach {
@@ -19,6 +20,15 @@ allprojects {
         it.options.release.set(21)
     }
 
+    tasks.build {
+        dependsOn(shadowJar)
+    }
 
+    shadowJar {
+        manifest {
+            attributes 'Main-Class': 'dev.qf.Main'
+        }
+        exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+    }
 }
 
