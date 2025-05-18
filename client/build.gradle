@@ -1,4 +1,12 @@
-dependencies {
-    shadow(project(path: ':common'))
+plugins {
+    id 'java'
+    id 'application'
+}
 
+application {
+    mainClass = 'dev.qf.client.OwnerMainUI'
+}
+
+dependencies {
+    implementation project(':common')
 }
