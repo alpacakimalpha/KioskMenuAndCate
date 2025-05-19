@@ -1,6 +1,4 @@
-package dev.qf.client;
-
-import common.Order;
+package common;
 
 import java.util.List;
 

@@ -3,10 +3,12 @@ package dev.qf.client;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import common.OrderItem;
+import common.Order;
 
 public class OrderDetailView extends JDialog {
     private OwnerMainUI ownerMainUI;
-    private String orderId;
+    private final String orderId;
 
     public OrderDetailView(String orderId, OwnerMainUI ownerMainUI) {
         this.orderId = orderId;
@@ -45,9 +47,11 @@ public class OrderDetailView extends JDialog {
         }
 
         Order order = getOrderDetail(orderId);
-        OrderItem item = order.getItems().get(0);
+        OrderItem item = order.getItems().isEmpty() ?
+                new OrderItem("알 수 없음", 0, "알 수 없음") :
+                order.getItems().get(0);
 
-        JLabel menuLabel = new JLabel(item.getName() + " " + item.getQuantity() + "개");
+        JLabel menuLabel = new JLabel(item.name() + " " + item.quantity() + "개");
         menuLabel.setFont(new Font("맑은 고딕", Font.BOLD, 18));
         menuLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         contentPanel.add(Box.createVerticalStrut(8));
@@ -59,7 +63,7 @@ public class OrderDetailView extends JDialog {
         infoPanel.add(new JLabel("사이즈 :"));
         infoPanel.add(new JLabel("regular"));
         infoPanel.add(new JLabel("옵션 :"));
-        infoPanel.add(new JLabel(item.getOption()));
+        infoPanel.add(new JLabel(item.option()));
         infoPanel.add(new JLabel("포장 :"));
         infoPanel.add(new JLabel("아니요"));
         contentPanel.add(Box.createVerticalStrut(8));
@@ -107,13 +111,12 @@ public class OrderDetailView extends JDialog {
 
     private Order getOrderDetail(String orderId) {
         // TODO: DB 연동 시 더미 데이터 제거
-        for (Order order : ownerMainUI.getOrderService().getOrderList()) {
+            for (Order order : ownerMainUI.getOrderService().getOrderList()) {
             if (order.getOrderId().equals(orderId)) {
                 return order;
             }
         }
-        Order emptyOrder = new Order(orderId, "알 수 없음", "알 수 없음");
-        emptyOrder.addItem(new OrderItem("알 수 없음", 0, "알 수 없음"));
-        return emptyOrder;
+        // 없으면 빈 Order 반환
+        return new Order(orderId, "알 수 없음", "알 수 없음");
     }
 }

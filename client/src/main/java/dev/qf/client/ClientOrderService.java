@@ -1,20 +1,24 @@
 package dev.qf.client;
 
+import common.Order;
+import common.OrderItem;
+import common.OrderService;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ClientOrderService implements OrderService {
-    private List<Order> orders = new ArrayList<>();
+    private final List<Order> orders = new ArrayList<>();
 
     public ClientOrderService() {
-        // TODO: DB 연동 시 아래 더미 데이터는 DB에서 불러오도록 변경
-        Order order1 = new Order("1", "2025-05-19 14:30", "대기중");
-        order1.addItem(new OrderItem("아메리카노", 1, "ICE"));
-        orders.add(order1);
+        // 더미 데이터 생성 (common.Order 사용)
+        List<OrderItem> items1 = new ArrayList<>();
+        items1.add(new OrderItem("아메리카노", 1, "ICE"));
+        orders.add(new Order("1", new Date().toString(), "대기중", items1));
 
-        Order order2 = new Order("2", "2025-05-19 15:00", "대기중");
-        order2.addItem(new OrderItem("카페라떼", 2, "HOT"));
-        orders.add(order2);
+        List<OrderItem> items2 = new ArrayList<>();
+        items2.add(new OrderItem("카페라떼", 2, "HOT"));
+        orders.add(new Order("2", new Date().toString(), "대기중", items2));
     }
 
     @Override

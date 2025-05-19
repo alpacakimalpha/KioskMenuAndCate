@@ -1,3 +1,0 @@
-rootProject.name = "Cafeteria-Kiosk"
-
-include ':client', ':common'

@@ -1,5 +1,7 @@
 package dev.qf.client;
 
+import common.Order;
+import common.OrderService;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
