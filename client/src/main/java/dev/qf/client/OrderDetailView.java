@@ -14,64 +14,72 @@ public class OrderDetailView extends JDialog {
 
         setTitle("주문번호 " + orderId);
         setModal(true);
-        setSize(340, 560);
+        setSize(280, 440);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBackground(Color.WHITE);
 
-        JLabel orderLabel = new JLabel("주문번호 " + orderId, SwingConstants.CENTER);
-        orderLabel.setFont(new Font("맑은 고딕", Font.BOLD, 22));
-        orderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(orderLabel);
+        JLabel orderNumLabel = new JLabel("주문번호 " + orderId, SwingConstants.CENTER);
+        orderNumLabel.setFont(new Font("맑은 고딕", Font.BOLD, 22));
+        orderNumLabel.setForeground(new Color(51, 153, 255));
+        orderNumLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(orderNumLabel);
 
+        contentPanel.add(Box.createVerticalStrut(8));
         URL imgUrl = getClass().getResource("/americano.jpg");
         if (imgUrl != null) {
             ImageIcon icon = new ImageIcon(imgUrl);
-            Image scaledImg = icon.getImage().getScaledInstance(150, 180, Image.SCALE_SMOOTH);
+            Image scaledImg = icon.getImage().getScaledInstance(120, 170, Image.SCALE_SMOOTH);
             JLabel imageLabel = new JLabel(new ImageIcon(scaledImg));
             imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            mainPanel.add(Box.createVerticalStrut(10));
-            mainPanel.add(imageLabel);
+            contentPanel.add(imageLabel);
         } else {
             JLabel errorLabel = new JLabel("이미지를 찾을 수 없습니다.");
             errorLabel.setForeground(Color.RED);
             errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            mainPanel.add(Box.createVerticalStrut(10));
-            mainPanel.add(errorLabel);
+            contentPanel.add(errorLabel);
         }
 
         Order order = getOrderDetail(orderId);
-        JLabel menuLabel = new JLabel(order.getItems().get(0).getName() + " " +
-                order.getItems().get(0).getQuantity() + "개");
+        OrderItem item = order.getItems().get(0);
+
+        JLabel menuLabel = new JLabel(item.getName() + " " + item.getQuantity() + "개");
         menuLabel.setFont(new Font("맑은 고딕", Font.BOLD, 18));
         menuLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(menuLabel);
+        contentPanel.add(Box.createVerticalStrut(8));
+        contentPanel.add(menuLabel);
 
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new GridLayout(3, 2, 5, 5));
+        JPanel infoPanel = new JPanel(new GridLayout(3, 2, 2, 2));
+        infoPanel.setOpaque(false);
+        infoPanel.setMaximumSize(new Dimension(200, 60));
         infoPanel.add(new JLabel("사이즈 :"));
         infoPanel.add(new JLabel("regular"));
         infoPanel.add(new JLabel("옵션 :"));
-        infoPanel.add(new JLabel(order.getItems().get(0).getOption()));
+        infoPanel.add(new JLabel(item.getOption()));
         infoPanel.add(new JLabel("포장 :"));
         infoPanel.add(new JLabel("아니요"));
-        mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(infoPanel);
-
-        JScrollPane scrollPane = new JScrollPane(mainPanel);
-        scrollPane.setBorder(null);
+        contentPanel.add(Box.createVerticalStrut(8));
+        contentPanel.add(infoPanel);
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
         JButton cancelBtn = new JButton("주문 취소");
-        cancelBtn.setBackground(Color.RED);
+        cancelBtn.setBackground(new Color(204, 0, 0));
         cancelBtn.setForeground(Color.WHITE);
+        cancelBtn.setFocusPainted(false);
+        cancelBtn.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        cancelBtn.setPreferredSize(new Dimension(110, 40));
+
         JButton acceptBtn = new JButton("주문 수락");
         acceptBtn.setBackground(new Color(51, 153, 255));
         acceptBtn.setForeground(Color.WHITE);
+        acceptBtn.setFocusPainted(false);
+        acceptBtn.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        acceptBtn.setPreferredSize(new Dimension(110, 40));
 
         cancelBtn.addActionListener(e -> {
             ownerMainUI.getOrderService().cancelOrder(orderId);
@@ -88,14 +96,17 @@ public class OrderDetailView extends JDialog {
         });
 
         buttonPanel.add(cancelBtn);
+        buttonPanel.add(Box.createHorizontalStrut(10));
         buttonPanel.add(acceptBtn);
 
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(scrollPane, BorderLayout.CENTER);
-        getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+        contentPanel.add(Box.createVerticalStrut(18));
+        contentPanel.add(buttonPanel);
+
+        add(contentPanel);
     }
 
     private Order getOrderDetail(String orderId) {
+        // TODO: DB 연동 시 더미 데이터 제거
         for (Order order : ownerMainUI.getOrderService().getOrderList()) {
             if (order.getOrderId().equals(orderId)) {
                 return order;
