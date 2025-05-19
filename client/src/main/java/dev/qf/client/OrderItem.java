@@ -11,7 +11,6 @@ public class OrderItem {
         this.option = option;
     }
 
-    // Getter 메서드
     public String getName() { return name; }
     public int getQuantity() { return quantity; }
     public String getOption() { return option; }
