@@ -1,2 +1,1 @@
-// settings.gradle
-rootProject.name = "Cafeteria-Kiosk-Client"  // ✅ 직접 이름 지정
+rootProject.name = "Cafeteria-Kiosk-Client"

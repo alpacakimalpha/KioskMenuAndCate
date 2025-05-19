@@ -1,4 +1,3 @@
-// settings.gradle (루트에 생성)
 rootProject.name = "Cafeteria-Kiosk"
 
 include ':client', ':common'
