@@ -14,11 +14,10 @@ public class OrderDetailView extends JDialog {
 
         setTitle("주문번호 " + orderId);
         setModal(true);
-        setSize(340, 560); // 높이 충분히 크게!
+        setSize(340, 560);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        // BorderLayout 사용
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
@@ -28,7 +27,6 @@ public class OrderDetailView extends JDialog {
         mainPanel.add(Box.createVerticalStrut(10));
         mainPanel.add(orderLabel);
 
-        // 이미지
         URL imgUrl = getClass().getResource("/americano.jpg");
         if (imgUrl != null) {
             ImageIcon icon = new ImageIcon(imgUrl);
@@ -45,7 +43,6 @@ public class OrderDetailView extends JDialog {
             mainPanel.add(errorLabel);
         }
 
-        // 메뉴명, 수량
         Order order = getOrderDetail(orderId);
         JLabel menuLabel = new JLabel(order.getItems().get(0).getName() + " " +
                 order.getItems().get(0).getQuantity() + "개");
@@ -54,7 +51,6 @@ public class OrderDetailView extends JDialog {
         mainPanel.add(Box.createVerticalStrut(10));
         mainPanel.add(menuLabel);
 
-        // 상세 정보
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new GridLayout(3, 2, 5, 5));
         infoPanel.add(new JLabel("사이즈 :"));
@@ -66,11 +62,9 @@ public class OrderDetailView extends JDialog {
         mainPanel.add(Box.createVerticalStrut(10));
         mainPanel.add(infoPanel);
 
-        // 스크롤 지원 (내용이 많을 때)
         JScrollPane scrollPane = new JScrollPane(mainPanel);
         scrollPane.setBorder(null);
 
-        // 버튼 패널 (아래 고정)
         JPanel buttonPanel = new JPanel();
         JButton cancelBtn = new JButton("주문 취소");
         cancelBtn.setBackground(Color.RED);
@@ -96,7 +90,6 @@ public class OrderDetailView extends JDialog {
         buttonPanel.add(cancelBtn);
         buttonPanel.add(acceptBtn);
 
-        // BorderLayout으로 배치
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(scrollPane, BorderLayout.CENTER);
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);

@@ -15,13 +15,11 @@ public class Order {
         this.status = status;
     }
 
-    // Getter 메서드
     public String getOrderId() { return orderId; }
     public String getOrderTime() { return orderTime; }
     public String getStatus() { return status; }
     public List<OrderItem> getItems() { return items; }
 
-    // Setter 추가
     public void setStatus(String status) {
         this.status = status;
     }

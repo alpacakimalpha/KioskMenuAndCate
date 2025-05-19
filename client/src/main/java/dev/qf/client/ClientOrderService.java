@@ -7,7 +7,7 @@ public class ClientOrderService implements OrderService {
     private List<Order> orders = new ArrayList<>();
 
     public ClientOrderService() {
-        // 더미 데이터 초기화
+        // TODO: DB 연동 시 아래 더미 데이터는 DB에서 불러오도록 변경
         Order order1 = new Order("1", "2025-05-19 14:30", "대기중");
         order1.addItem(new OrderItem("아메리카노", 1, "ICE"));
         orders.add(order1);
