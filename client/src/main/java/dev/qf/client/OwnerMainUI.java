@@ -75,7 +75,7 @@ public class OwnerMainUI extends JFrame {
     private void updateOrderTable(List<Order> orders) {
         tableModel.setRowCount(0);
         for (Order order : orders) {
-            Object[] rowData = {order.getOrderId(), order.getOrderTime(), order.getStatus()};
+            Object[] rowData = {order.orderId(), order.orderTime(), order.status()};
             tableModel.addRow(rowData);
         }
     }

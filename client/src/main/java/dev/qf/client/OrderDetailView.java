@@ -47,9 +47,9 @@ public class OrderDetailView extends JDialog {
         }
 
         Order order = getOrderDetail(orderId);
-        OrderItem item = order.getItems().isEmpty() ?
-                new OrderItem("알 수 없음", 0, "알 수 없음") :
-                order.getItems().get(0);
+        OrderItem item = order.items().isEmpty() ?
+                OrderItem.EMPTY :
+                order.items().get(0);
 
         JLabel menuLabel = new JLabel(item.name() + " " + item.quantity() + "개");
         menuLabel.setFont(new Font("맑은 고딕", Font.BOLD, 18));
@@ -110,13 +110,11 @@ public class OrderDetailView extends JDialog {
     }
 
     private Order getOrderDetail(String orderId) {
-        // TODO: DB 연동 시 더미 데이터 제거
-            for (Order order : ownerMainUI.getOrderService().getOrderList()) {
-            if (order.getOrderId().equals(orderId)) {
+        for (Order order : ownerMainUI.getOrderService().getOrderList()) {
+            if (order.orderId().equals(orderId)) {
                 return order;
             }
         }
-        // 없으면 빈 Order 반환
-        return new Order(orderId, "알 수 없음", "알 수 없음");
+        return Order.EMPTY;
     }
 }

@@ -28,18 +28,20 @@ public class ClientOrderService implements OrderService {
 
     @Override
     public void acceptOrder(String orderId) {
-        for (Order order : orders) {
-            if (order.getOrderId().equals(orderId)) {
-                order.setStatus("수락됨");
+        for (int i = 0; i < orders.size(); i++) {
+            Order order = orders.get(i);
+            if (order.orderId().equals(orderId)) {
+                orders.set(i, order.withStatus("수락됨"));
             }
         }
     }
 
     @Override
     public void cancelOrder(String orderId) {
-        for (Order order : orders) {
-            if (order.getOrderId().equals(orderId)) {
-                order.setStatus("취소됨");
+        for (int i = 0; i < orders.size(); i++) {
+            Order order = orders.get(i);
+            if (order.orderId().equals(orderId)) {
+                orders.set(i, order.withStatus("취소됨"));
             }
         }
     }

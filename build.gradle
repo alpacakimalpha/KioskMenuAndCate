@@ -11,6 +11,6 @@ allprojects {
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
-        it.options.release.set(21) // Java 21 사용
+        it.options.release.set(21)
     }
 }
