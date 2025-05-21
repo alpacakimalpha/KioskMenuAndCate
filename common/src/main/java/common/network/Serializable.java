@@ -1,0 +1,30 @@
+package common.network;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
+
+public interface Serializable<T> {
+    String PACKET_ID_PROPERTY = "packetId";
+    String DATA_PROPERTY = "data";
+
+    String getPacketId();
+    default T fromJson(JsonObject json) {
+        if (!json.has("data")) {
+            throw new JsonParseException("Can not find data field");
+        }
+        return getCodec().decode(JsonOps.COMPRESSED, json.get("data")).getOrThrow().getFirst();
+    }
+    T getValue();
+    default JsonElement toJson() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("packetId", getPacketId());
+        JsonElement dataValue = getCodec().encodeStart(JsonOps.COMPRESSED, getValue()).getOrThrow();
+        jsonObject.add("data", dataValue);
+
+        return jsonObject;
+    }
+    Codec<T> getCodec();
+}
