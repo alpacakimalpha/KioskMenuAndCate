@@ -21,10 +21,6 @@ public class Order {
         this(orderId, orderTime, status, new ArrayList<>());
     }
 
-    public String getOrderId() { return orderId; }
-    public String getOrderTime() { return orderTime; }
-    public String getStatus() { return status; }
-    public List<OrderItem> getItems() { return items; }
 
     public void setStatus(String status) {
         this.status = status;
