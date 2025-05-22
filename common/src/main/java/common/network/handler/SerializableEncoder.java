@@ -13,10 +13,8 @@ public class SerializableEncoder extends MessageToByteEncoder<Serializable<?>> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, Serializable<?> msg, ByteBuf out) throws Exception {
-
-        StringEncodings.encode(out, msg.toJson().getAsString(), 65535);
-        int i = out.readableBytes();
-        LOGGER.info("OUT : [{}] -> {} bytes", msg.getPacketId(), i);
-
+            StringEncodings.encode(out, msg.toJson().toString(), 65535);
+            int i = out.readableBytes();
+            LOGGER.info("OUT : [{}] -> {} bytes", msg.getPacketId(), i);
     }
 }
