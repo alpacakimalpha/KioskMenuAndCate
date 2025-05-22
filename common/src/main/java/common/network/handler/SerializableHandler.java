@@ -22,6 +22,8 @@ public class SerializableHandler extends SimpleChannelInboundHandler<SidedPacket
         LOGGER.info(s.toString());
         if (s.getSide() == this.side) { // 이게 그렇게 쓸모 있는 코드가 아닌 것 같지만 아무튼.
             s.apply();
+        } else {
+            LOGGER.warn("received a packet that is not a side packet : {}", s);
         }
     }
 
