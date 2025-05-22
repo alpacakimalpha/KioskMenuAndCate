@@ -88,10 +88,4 @@ public class OwnerMainUI extends JFrame {
         return orderService;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            OwnerMainUI app = new OwnerMainUI();
-            app.setVisible(true);
-        });
-    }
 }
