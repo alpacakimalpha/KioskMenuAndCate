@@ -2,6 +2,7 @@ package common.network.packet;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import common.KioskLoggerFactory;
 
 public record HandShakeS2CInfo(String id) implements SidedPacket {
     public static final Codec<HandShakeS2CInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -17,5 +18,6 @@ public record HandShakeS2CInfo(String id) implements SidedPacket {
     @Override
     public  void apply() {
         // TODO : IMPELEMENT HANDSHAKE LOGIC
+        KioskLoggerFactory.getLogger().info(id);
     }
 }
