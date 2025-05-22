@@ -11,11 +11,12 @@ public class NetworkConnectionTest {
     @Test
     public void testNetworkConnection() throws InterruptedException {
         Main.INSTANCE.run();
-        var future = Main.INSTANCE.getChannel().writeAndFlush(new HandShakePacket(new HandShakeS2CInfo("test"))).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+        var future = Main.INSTANCE.sendSerializable(new HandShakePacket(new HandShakeS2CInfo("test")));
 
-        while(!future.isSuccess()) {
-
+        while(!future.isDone()) {
+            Thread.sleep(100);
         }
+        Assertions.assertTrue(future.isSuccess());
         //        ChannelFuture future = KioskNettyClient.connect("127.0.0.1", 8192);
 //        future.channel().writeAndFlush("Hello World");
 
