@@ -2,10 +2,8 @@ package dev.qf.client.network;
 
 import common.KioskLoggerFactory;
 import common.network.Connection;
+import common.network.Serializable;
 import common.network.SerializableManager;
-import common.network.handler.SerializableDecoder;
-import common.network.handler.SerializableEncoder;
-import common.network.handler.SerializableHandler;
 import common.network.packet.SidedPacket;
 import common.util.Container;
 import dev.qf.client.Main;
@@ -13,7 +11,6 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.slf4j.Logger;
 
 public class KioskNettyClient implements Connection {
@@ -40,35 +37,7 @@ public class KioskNettyClient implements Connection {
             bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
             SerializableManager.initialize();
 
-            bootstrap.handler(new ChannelInitializer<Channel>() {
-                @Override
-                protected void initChannel(Channel ch) throws Exception {
-                    try {
-                        ch.config().setOption(ChannelOption.TCP_NODELAY, true);
-
-                    } catch (ChannelException ignored) {
-                        // NOP
-                    }
-
-                    ChannelPipeline pipeline = ch.pipeline()
-                            .addLast("timeout", new ReadTimeoutHandler(30));
-
-                    pipeline.addLast("decoder", new SerializableDecoder());
-//                    pipeline.addLast("logger", new LoggingHandler(LogLevel.DEBUG));
-                    pipeline.addLast("encoder", new SerializableEncoder());
-                    pipeline.addLast("handler", new SerializableHandler(SidedPacket.Side.CLIENT));
-
-//                    pipeline.addLast("encoder", new StringEncoder());
-//                    pipeline.addLast("handler", new ChannelInboundHandlerAdapter() {
-//                        @Override
-//                        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-//                            super.channelRead(ctx, msg);
-//                            LOGGER.info(msg.toString());
-//                        }
-//                    });
-
-                }
-            });
+            bootstrap.handler(this.initializeChannelInitializer(SidedPacket.Side.CLIENT));
 
             this.setChannel(bootstrap.connect("localhost", port).syncUninterruptibly().channel());
 
@@ -88,6 +57,11 @@ public class KioskNettyClient implements Connection {
             CHANNEL.shutdownGracefully().syncUninterruptibly();
         }
         LOGGER.info("Client shutdown complete.");
+    }
+
+    @Override
+    public ChannelFuture sendSerializable(Serializable<?> serializable) {
+        return this.channel.writeAndFlush(serializable).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
     }
 
     @Override

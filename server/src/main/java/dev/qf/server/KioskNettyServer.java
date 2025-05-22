@@ -2,10 +2,8 @@ package dev.qf.server;
 
 import common.KioskLoggerFactory;
 import common.network.Connection;
+import common.network.Serializable;
 import common.network.SerializableManager;
-import common.network.handler.SerializableDecoder;
-import common.network.handler.SerializableEncoder;
-import common.network.handler.SerializableHandler;
 import common.network.packet.SidedPacket;
 import common.util.Container;
 import io.netty.bootstrap.ServerBootstrap;
@@ -40,32 +38,11 @@ public class KioskNettyServer implements Connection {
             SerializableManager.initialize();
 
             serverBootstrap.handler(new LoggingHandler(LogLevel.INFO));
-            serverBootstrap.childHandler(new ChannelInitializer<Channel>() {
-                @Override
-                protected void initChannel(Channel channel) {
-                    try {
-                        channel.config().setOption(ChannelOption.TCP_NODELAY, true);
-                        channel.config().setOption(ChannelOption.SO_KEEPALIVE, true);
-                    } catch (ChannelException ignored) {
-                        // NOP
-                    }
-
-                    ChannelPipeline pipeline = channel.pipeline()
-//                            .addLast("timeout", new ReadTimeoutHandler(30))
-                            ;
-
-                    pipeline.addLast("serializable_decoder", new SerializableDecoder());
-                    pipeline.addLast("encoder", new SerializableEncoder());
-                    pipeline.addLast("handler", new SerializableHandler(SidedPacket.Side.SERVER));
-                }
-
-
-            });
+            serverBootstrap.childHandler(this.initializeChannelInitializer(SidedPacket.Side.SERVER));
             serverBootstrap.bind(port).syncUninterruptibly().channel().closeFuture().sync();
         } catch (Exception e) {
             LOGGER.error("Failed to start server.");
             LOGGER.error(e.getMessage());
-        } finally {
         }
     }
 
@@ -85,6 +62,11 @@ public class KioskNettyServer implements Connection {
             WORKER.shutdownGracefully().syncUninterruptibly();
         }
         LOGGER.info("Client shutdown complete.");
+    }
+
+    @Override
+    public ChannelFuture sendSerializable(Serializable<?> serializable) {
+        return this.channel.writeAndFlush(serializable).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
     }
 
     @Override
