@@ -1,6 +1,7 @@
 package common.network.handler;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
@@ -30,7 +31,7 @@ public class SerializableDecoder extends ByteToMessageDecoder {
                 LOGGER.error(e.getMessage(), e);
                 return;
             }
-            JsonObject jsonObject = gson.toJsonTree(msg).getAsJsonObject();
+            JsonObject jsonObject = gson.fromJson(msg, JsonObject.class);
             String type = jsonObject.get(Serializable.PACKET_ID_PROPERTY).getAsString();
 
             if (in.readableBytes() > 0) {
@@ -43,7 +44,7 @@ public class SerializableDecoder extends ByteToMessageDecoder {
                 );
             } else {
                 Codec<?> codec = SerializableManager.getCodec(type).orElseThrow(() -> new IllegalArgumentException("Unknown packet type: " + type));
-
+                out.add(codec.decode(JsonOps.INSTANCE, jsonObject.get(Serializable.DATA_PROPERTY)).getOrThrow().getFirst());
 
 
                 LOGGER.info(SerializableManager.SERIALIZABLE_RECEIVED_MARKER, "IN [{}] -> {} bytes", type, i);
