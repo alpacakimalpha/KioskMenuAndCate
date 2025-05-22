@@ -42,7 +42,7 @@ public class OwnerMainUI extends JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int row = orderTable.rowAtPoint(evt.getPoint());
                 if (row != -1 && evt.getButton() == java.awt.event.MouseEvent.BUTTON1) {
-                    String orderId = (String) orderTable.getValueAt(row, 0);
+                    int orderId = (Integer) orderTable.getValueAt(row, 0);
                     OrderDetailView detailView = new OrderDetailView(orderId, OwnerMainUI.this);
                     detailView.setVisible(true);
                 }
@@ -87,5 +87,4 @@ public class OwnerMainUI extends JFrame {
     public OrderService getOrderService() {
         return orderService;
     }
-
 }

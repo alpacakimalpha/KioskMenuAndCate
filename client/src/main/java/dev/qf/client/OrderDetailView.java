@@ -8,9 +8,9 @@ import common.Order;
 
 public class OrderDetailView extends JDialog {
     private OwnerMainUI ownerMainUI;
-    private final String orderId;
+    private final int orderId;
 
-    public OrderDetailView(String orderId, OwnerMainUI ownerMainUI) {
+    public OrderDetailView(int orderId, OwnerMainUI ownerMainUI) {
         this.orderId = orderId;
         this.ownerMainUI = ownerMainUI;
 
@@ -109,9 +109,9 @@ public class OrderDetailView extends JDialog {
         add(contentPanel);
     }
 
-    private Order getOrderDetail(String orderId) {
+    private Order getOrderDetail(int orderId) {
         for (Order order : ownerMainUI.getOrderService().getOrderList()) {
-            if (order.orderId().equals(orderId)) {
+            if (order.orderId() == orderId) {
                 return order;
             }
         }
