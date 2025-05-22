@@ -15,13 +15,13 @@ public interface Serializable<T> {
         if (!json.has("data")) {
             throw new JsonParseException("Can not find data field");
         }
-        return getCodec().decode(JsonOps.COMPRESSED, json.get("data")).getOrThrow().getFirst();
+        return getCodec().decode(JsonOps.INSTANCE, json.get("data")).getOrThrow().getFirst();
     }
     T getValue();
     default JsonElement toJson() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("packetId", getPacketId());
-        JsonElement dataValue = getCodec().encodeStart(JsonOps.COMPRESSED, getValue()).getOrThrow();
+        JsonElement dataValue = getCodec().encodeStart(JsonOps.INSTANCE, getValue()).getOrThrow();
         jsonObject.add("data", dataValue);
 
         return jsonObject;
