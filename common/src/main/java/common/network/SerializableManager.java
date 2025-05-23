@@ -1,7 +1,7 @@
 package common.network;
 
 import com.mojang.serialization.Codec;
-import common.network.packet.HandShakeS2CInfo;
+import common.network.packet.HandShakeC2SInfo;
 import common.network.packet.SidedPacket;
 import common.util.CommonUtils;
 import org.slf4j.Marker;
@@ -34,10 +34,10 @@ public class SerializableManager {
     }
 
     public static void initialize() {
-        // NOP
+
     }
 
     static {
-        register("handshake", HandShakeS2CInfo.CODEC);
+        register("handshake_c2s_info", HandShakeC2SInfo.CODEC);
     }
 }
