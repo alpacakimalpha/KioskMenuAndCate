@@ -13,7 +13,7 @@ public class StringEncodings {
         int j = VariableInts.read(buf);
 
         if (j > i) {
-            throw new DecoderException("The recived encoded string buffer length is longer than alowwed ( %s > %s )".formatted(j, i));
+            throw new DecoderException("The received encoded string buffer length is longer than allowed ( %s > %s )".formatted(j, i));
         } else if (j < 0) {
             throw new DecoderException("ok ok. but why length is lower than zero?");
         } else {
