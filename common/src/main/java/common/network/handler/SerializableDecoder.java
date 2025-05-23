@@ -38,10 +38,10 @@ public class SerializableDecoder extends ByteToMessageDecoder {
             if (in.readableBytes() > 0) {
                 throw new IOException(
                         "Packet " +
-                                type+
-                                "was larger than i expected. found" +
-                                in.readableBytes() +
-                                "bytes extra whilst reading packet."
+                        type +
+                        " was larger than expected; found " +
+                        in.readableBytes() +
+                        " extra bytes while reading the packet."
                 );
             } else {
                 Codec<?> codec = SerializableManager.getCodec(type).orElseThrow(() -> new IllegalArgumentException("Unknown packet type: " + type));
