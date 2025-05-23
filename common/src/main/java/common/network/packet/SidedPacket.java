@@ -1,9 +1,16 @@
 package common.network.packet;
 
-public interface SidedPacket {
+import common.network.Serializable;
+
+public interface SidedPacket extends Serializable<SidedPacket> {
     Side getSide();
     void apply();
     enum Side {
         SERVER, CLIENT
+    }
+
+    @Override
+    default SidedPacket getValue() {
+        return this;
     }
 }
