@@ -9,6 +9,7 @@ import common.KioskLoggerFactory;
 import common.network.Serializable;
 import common.network.SerializableManager;
 import common.network.encoding.StringEncodings;
+import common.util.JsonHelper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -32,7 +33,7 @@ public class SerializableDecoder extends ByteToMessageDecoder {
                 return;
             }
             JsonObject jsonObject = gson.fromJson(msg, JsonObject.class);
-            String type = jsonObject.get(Serializable.PACKET_ID_PROPERTY).getAsString();
+            String type = JsonHelper.getString(jsonObject, Serializable.PACKET_ID_PROPERTY);
 
             if (in.readableBytes() > 0) {
                 throw new IOException(
