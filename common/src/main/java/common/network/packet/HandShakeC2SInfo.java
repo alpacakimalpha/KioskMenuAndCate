@@ -18,7 +18,7 @@ public record HandShakeC2SInfo(String id) implements SidedPacket {
 
     @Override
     public  void apply() {
-        // TODO : IMPELEMENT HANDSHAKE LOGIC
+        // TODO : IMPLEMENT HANDSHAKE LOGIC
         KioskLoggerFactory.getLogger().info(id);
     }
 
