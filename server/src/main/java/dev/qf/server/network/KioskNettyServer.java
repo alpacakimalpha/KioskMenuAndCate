@@ -1,4 +1,4 @@
-package dev.qf.server;
+package dev.qf.server.network;
 
 import common.KioskLoggerFactory;
 import common.network.Connection;
@@ -22,8 +22,8 @@ public class KioskNettyServer implements Connection {
     public static final Logger LOGGER = KioskLoggerFactory.getLogger();
     private Channel channel;
 
-    KioskNettyServer() {
-        if (Main.INSTANCE != null) {
+    public KioskNettyServer() {
+        if (Container.get(Connection.class) != null) {
             throw new IllegalStateException("Server is already started");
         }
         Container.put(Connection.class, this);
