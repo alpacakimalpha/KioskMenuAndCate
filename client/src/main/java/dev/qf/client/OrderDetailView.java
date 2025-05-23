@@ -2,9 +2,9 @@ package dev.qf.client;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URL;
 import common.OrderItem;
 import common.Order;
+import common.Cart;
 
 public class OrderDetailView extends JDialog {
     private OwnerMainUI ownerMainUI;
@@ -16,7 +16,7 @@ public class OrderDetailView extends JDialog {
 
         setTitle("주문번호 " + orderId);
         setModal(true);
-        setSize(280, 440);
+        setSize(320, 440);
         setLocationRelativeTo(null);
         setResizable(false);
 
@@ -32,38 +32,41 @@ public class OrderDetailView extends JDialog {
         contentPanel.add(orderNumLabel);
 
         contentPanel.add(Box.createVerticalStrut(8));
-        URL imgUrl = getClass().getResource("/americano.jpg");
-        if (imgUrl != null) {
-            ImageIcon icon = new ImageIcon(imgUrl);
-            Image scaledImg = icon.getImage().getScaledInstance(120, 170, Image.SCALE_SMOOTH);
-            JLabel imageLabel = new JLabel(new ImageIcon(scaledImg));
-            imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            contentPanel.add(imageLabel);
-        } else {
-            JLabel errorLabel = new JLabel("이미지를 찾을 수 없습니다.");
-            errorLabel.setForeground(Color.RED);
-            errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            contentPanel.add(errorLabel);
-        }
 
         Order order = getOrderDetail(orderId);
-        OrderItem item = order.items().isEmpty() ?
-                OrderItem.EMPTY :
-                order.items().get(0);
+        Cart cart = order.cart();
 
-        JLabel menuLabel = new JLabel(item.name() + " " + item.quantity() + "개");
-        menuLabel.setFont(new Font("맑은 고딕", Font.BOLD, 18));
-        menuLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        contentPanel.add(Box.createVerticalStrut(8));
-        contentPanel.add(menuLabel);
 
-        JPanel infoPanel = new JPanel(new GridLayout(3, 2, 2, 2));
+        if (cart == null || cart.items().isEmpty()) {
+            JLabel emptyLabel = new JLabel("주문 항목이 없습니다.");
+            emptyLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
+            emptyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            contentPanel.add(emptyLabel);
+        } else {
+            for (OrderItem item : cart.items()) {
+                JLabel menuLabel = new JLabel(item.name() + " " + item.quantity() + "개");
+                menuLabel.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+                menuLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                contentPanel.add(menuLabel);
+
+                String optionText;
+                if (item.name().contains("케이크")) {
+                    optionText = "(옵션: " + item.option() + ")";
+                } else {
+                    optionText = "(regular, " + item.option() + ")";
+                }
+                JLabel optionLabel = new JLabel(optionText);
+                optionLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+                optionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                contentPanel.add(optionLabel);
+
+                contentPanel.add(Box.createVerticalStrut(4));
+            }
+        }
+
+        JPanel infoPanel = new JPanel(new GridLayout(1, 2, 2, 2));
         infoPanel.setOpaque(false);
-        infoPanel.setMaximumSize(new Dimension(200, 60));
-        infoPanel.add(new JLabel("사이즈 :"));
-        infoPanel.add(new JLabel("regular"));
-        infoPanel.add(new JLabel("옵션 :"));
-        infoPanel.add(new JLabel(item.option()));
+        infoPanel.setMaximumSize(new Dimension(200, 30));
         infoPanel.add(new JLabel("포장 :"));
         infoPanel.add(new JLabel("아니요"));
         contentPanel.add(Box.createVerticalStrut(8));
