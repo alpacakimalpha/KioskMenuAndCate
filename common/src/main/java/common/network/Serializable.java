@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
+import org.jetbrains.annotations.NotNull;
 
 public interface Serializable<T> {
     String PACKET_ID_PROPERTY = "packetId";
@@ -17,7 +18,7 @@ public interface Serializable<T> {
         }
         return getCodec().decode(JsonOps.INSTANCE, json.get("data")).getOrThrow().getFirst();
     }
-    T getValue();
+    <A extends T> A getValue();
     default JsonElement toJson() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("packetId", getPacketId());
@@ -26,5 +27,6 @@ public interface Serializable<T> {
 
         return jsonObject;
     }
-    Codec<T> getCodec();
+    @NotNull
+    Codec<? extends T> getCodec();
 }
