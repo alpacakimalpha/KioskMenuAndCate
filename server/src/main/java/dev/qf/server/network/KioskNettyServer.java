@@ -27,6 +27,7 @@ public class KioskNettyServer implements Connection {
             throw new IllegalStateException("Server is already started");
         }
         Container.put(Connection.class, this);
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
     @Override
@@ -43,6 +44,7 @@ public class KioskNettyServer implements Connection {
         } catch (Exception e) {
             LOGGER.error("Failed to start server.");
             LOGGER.error(e.getMessage());
+            System.exit(1);
         }
     }
 

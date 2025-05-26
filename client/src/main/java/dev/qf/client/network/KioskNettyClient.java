@@ -4,6 +4,7 @@ import common.KioskLoggerFactory;
 import common.network.Connection;
 import common.network.Serializable;
 import common.network.SerializableManager;
+import common.network.handler.factory.PacketListenerFactory;
 import common.network.packet.SidedPacket;
 import common.util.Container;
 import dev.qf.client.Main;
@@ -26,6 +27,7 @@ public class KioskNettyClient implements Connection {
             throw new IllegalStateException("KioskNettyClient already initialized");
         }
         Container.put(Connection.class, this);
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
     @Override
@@ -78,4 +80,7 @@ public class KioskNettyClient implements Connection {
         return bootstrap.connect(host, port).syncUninterruptibly();
     }
 
+    static {
+        Container.put(PacketListenerFactory.class, new ClientPacketListenerFactory());
+    }
 }
