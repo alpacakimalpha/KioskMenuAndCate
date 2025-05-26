@@ -12,12 +12,6 @@ public interface Serializable<T> {
     String DATA_PROPERTY = "data";
 
     String getPacketId();
-    default T fromJson(JsonObject json) {
-        if (!json.has("data")) {
-            throw new JsonParseException("Can not find data field");
-        }
-        return getCodec().decode(JsonOps.INSTANCE, json.get("data")).getOrThrow().getFirst();
-    }
     <A extends T> A getValue();
     default JsonElement toJson() {
         JsonObject jsonObject = new JsonObject();
