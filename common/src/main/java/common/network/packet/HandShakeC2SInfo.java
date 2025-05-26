@@ -3,9 +3,10 @@ package common.network.packet;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import common.KioskLoggerFactory;
+import common.network.handler.server.ServerPacketListener;
 import org.jetbrains.annotations.NotNull;
 
-public record HandShakeC2SInfo(String id) implements SidedPacket {
+public record HandShakeC2SInfo(String id) implements SidedPacket<ServerPacketListener> {
     public static final Codec<HandShakeC2SInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                     Codec.STRING.fieldOf("id").forGetter(HandShakeC2SInfo::id)
             ).apply(instance, HandShakeC2SInfo::new)
@@ -17,9 +18,8 @@ public record HandShakeC2SInfo(String id) implements SidedPacket {
     }
 
     @Override
-    public  void apply() {
-        // TODO : IMPLEMENT HANDSHAKE LOGIC
-        KioskLoggerFactory.getLogger().info(id);
+    public void apply(ServerPacketListener listener) {
+        listener.onHandShake(this);
     }
 
     @Override
