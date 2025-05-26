@@ -24,7 +24,7 @@ public class StringEncodings {
                 String string = buf.toString(buf.readerIndex(), j, StandardCharsets.UTF_8);
                 buf.readerIndex(buf.readerIndex() + j);
                 if (string.length() > maxLength) {
-                    throw new DecoderException("The received string length is longer than maximum alowwed (" + string.length() + " > " + maxLength + ")");
+                    throw new DecoderException("The received string length is longer than maximum allowed (" + string.length() + " > " + maxLength + ")");
                 } else {
                     return string;
                 }
