@@ -1,5 +1,7 @@
 package common;
 
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +11,9 @@ public record OptionGroup(
         boolean required,
         List<Option> options
 ) {
+
+
+    @TestOnly
     //임시로 테스트를 위해 넣은 예시
     public static List<OptionGroup> loadOptionGroups(String menuId) {
         // 메뉴별 옵션 그룹 정의

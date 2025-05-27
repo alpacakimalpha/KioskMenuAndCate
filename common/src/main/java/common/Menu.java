@@ -1,5 +1,6 @@
 package common;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public record Menu(
@@ -7,7 +8,7 @@ public record Menu(
         String name,
         int price,
         String cateId,
-        String imagePath,
+        Path imagePath,
         String description,
         List<OptionGroup> optionGroup
 ) {}

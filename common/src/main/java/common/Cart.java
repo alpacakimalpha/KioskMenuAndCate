@@ -1,9 +1,11 @@
 package common;
 
+import it.unimi.dsi.fastutil.objects.Reference2IntLinkedOpenHashMap;
+
 import java.util.*;
 
 public class Cart {
-    private final Map<OrderItem, Integer> items = new LinkedHashMap<>();
+    private final Reference2IntLinkedOpenHashMap<OrderItem> items = new Reference2IntLinkedOpenHashMap<>();
 
     public void addItem(OrderItem item) {
         items.merge(item, 1, Integer::sum);
@@ -14,8 +16,8 @@ public class Cart {
     }
 
     public int calculateCartTotal() {
-        return items.entrySet().stream()
-                .mapToInt(e -> e.getKey().getTotalPrice() * e.getValue())
+        return items.reference2IntEntrySet().stream()
+                .mapToInt(e -> e.getKey().getTotalPrice() * e.getIntValue())
                 .sum();
     }
 
