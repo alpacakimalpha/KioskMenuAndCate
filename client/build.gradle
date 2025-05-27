@@ -1,20 +1,4 @@
-plugins {
-    id 'java'
-    id 'application'
-    id 'com.github.johnrengelman.shadow'
-}
-
 dependencies {
-    implementation project(':common')
-    shadow project(':common')
-}
-
-application {
-    mainClass = 'dev.qf.client.Main'
-}
-
-shadowJar {
-    manifest {
-        attributes 'Main-Class': 'dev.qf.client.Main'
-    }
+    shadow(project(':common'))
+    testImplementation(project(":common"))
 }

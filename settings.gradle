@@ -1,11 +1,4 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        mavenCentral()
-    }
-}
-
-rootProject.name = "Cafeteria-Kiosk"
-include "client"
-include "common"
-include "server"
+rootProject.name = "CafeTeria-Kiosk"
+include ":client"
+include ":server"
+include ":common"

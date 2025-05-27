@@ -1,16 +1,37 @@
 plugins {
     id 'java-library'
-    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
+    id 'com.gradleup.shadow' version '9.0.0-beta3'
 }
 
 allprojects {
-    apply plugin: 'java-library'
+    apply plugin : 'java-library'
+    apply plugin: 'com.gradleup.shadow'
     repositories {
         mavenCentral()
+        maven { url "https://libraries.minecraft.net" }
+    }
+
+    dependencies {
+        testImplementation platform('org.junit:junit-bom:5.10.0')
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+        testImplementation("org.testng:testng:7.7.0")
+//        implementation("io.netty:netty-pkitesting:${project.netty_version}")
     }
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
         it.options.release.set(21)
     }
+
+    tasks.build {
+        dependsOn(shadowJar)
+    }
+
+    shadowJar {
+        manifest {
+            attributes 'Main-Class': 'dev.qf.Main'
+        }
+        exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+    }
 }
+
