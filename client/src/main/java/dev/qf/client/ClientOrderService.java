@@ -13,15 +13,16 @@ public class ClientOrderService implements OrderService {
     private final List<Order> orders = new ArrayList<>();
 
     public ClientOrderService() {
-        List<OrderItem> items = new ArrayList<>();
-        items.add(new OrderItem("아메리카노", 1, "ICE"));
-        items.add(new OrderItem("카페라떼", 1, "HOT"));
-        items.add(new OrderItem("딸기케이크", 1, "조각"));
-
-        Cart cart = new Cart(items);
-
-        orders.add(new Order(1, "KIOSK-001", LocalDateTime.now(), OrderStatus.대기중, cart));
+//        List<OrderItem> items = new ArrayList<>();
+//        items.add(new OrderItem("아메리카노", 1, "ICE"));
+//        items.add(new OrderItem("카페라떼", 1, "HOT"));
+//        items.add(new OrderItem("딸기케이크", 1, "조각"));
+//
+//        Cart cart = new Cart(items);
+//
+//        orders.add(new Order(1, "KIOSK-001", LocalDateTime.now(), OrderStatus.PENDING, cart));
     }
+
 
     @Override
     public List<Order> getOrderList() {
@@ -33,7 +34,7 @@ public class ClientOrderService implements OrderService {
         for (int i = 0; i < orders.size(); i++) {
             Order order = orders.get(i);
             if (order.orderId() == orderId) {
-                orders.set(i, order.withStatus(OrderStatus.수락됨));
+                orders.set(i, order.withStatus(OrderStatus.ACCEPTED));
             }
         }
     }
@@ -43,7 +44,7 @@ public class ClientOrderService implements OrderService {
         for (int i = 0; i < orders.size(); i++) {
             Order order = orders.get(i);
             if (order.orderId() == orderId) {
-                orders.set(i, order.withStatus(OrderStatus.취소됨));
+                orders.set(i, order.withStatus(OrderStatus.CANCELED));
             }
         }
     }
