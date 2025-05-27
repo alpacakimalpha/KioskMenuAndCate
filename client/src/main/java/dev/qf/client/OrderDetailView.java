@@ -38,23 +38,24 @@ public class OrderDetailView extends JDialog {
         Order order = getOrderDetail(orderId);
         Cart cart = order.cart();
 
-        if (cart == null || cart.items().isEmpty()) {
+        if (cart == null || cart.getItems().isEmpty()) {
             JLabel emptyLabel = new JLabel("주문 항목이 없습니다.");
             emptyLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 20));
             emptyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             contentPanel.add(emptyLabel);
         } else {
-            for (OrderItem item : cart.items()) {
-                JLabel menuLabel = new JLabel(item.name() + " " + item.quantity() + "개");
+            for (var itemEntry : cart.getItems().entrySet()) {
+                JLabel menuLabel = new JLabel(itemEntry.getKey().getMenuItem().name() + " " + itemEntry.getValue() + "개");
                 menuLabel.setFont(new Font("맑은 고딕", Font.BOLD, 20));
                 menuLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 contentPanel.add(menuLabel);
 
                 String optionText;
-                if (item.name().contains("케이크")) {
-                    optionText = "(옵션: " + item.option() + ")";
+                if (itemEntry.getKey().getMenuItem().name().contains("케이크")) {
+                    // TODO : FIX THIS LOGIC.
+                    optionText = "(옵션: " + itemEntry.getKey().getSelectedOptions() + ")";
                 } else {
-                    optionText = "(regular, " + item.option() + ")";
+                    optionText = "(regular, " + itemEntry.getKey().getSelectedOptions() + ")";
                 }
                 JLabel optionLabel = new JLabel(optionText);
                 optionLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
