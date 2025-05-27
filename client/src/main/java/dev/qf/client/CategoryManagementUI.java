@@ -1,8 +1,11 @@
-package common;
+package dev.qf.client;
+
+import common.AddCategory;
+import common.Category;
+import common.DeleteCategory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.List;
 import java.util.ArrayList;
 

@@ -1,4 +1,6 @@
-package common;
+package dev.qf.client;
+
+import common.AddCategory;
 
 import javax.swing.*;
 import java.awt.*;
