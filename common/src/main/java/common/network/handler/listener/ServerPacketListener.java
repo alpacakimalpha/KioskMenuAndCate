@@ -1,6 +1,5 @@
-package common.network.handler.server;
+package common.network.handler.listener;
 
-import common.network.handler.PacketListener;
 import common.network.packet.HandShakeC2SInfo;
 import common.network.packet.UpdateDataPacket;
 
