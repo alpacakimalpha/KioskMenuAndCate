@@ -1,9 +1,13 @@
-package common;
+package dev.qf.client;
+
+import common.Cart;
+import common.Menu;
+import common.OptionGroup;
+import common.OrderItem;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserMainUI extends JFrame {
@@ -11,7 +15,7 @@ public class UserMainUI extends JFrame {
     private final CartController cartController = new CartController(cart);
     private final OptionSelectionController optionController = new OptionSelectionController();
     private final JPanel cartPanel = new JPanel();
-    private final JPanel menuPanel = new JPanel(new GridLayout(0, 3, 10, 10));    private final List<Menu> allMenus;
+    private final JPanel menuPanel = new JPanel(new GridLayout(0, 3, 10, 10));    private final List<common.Menu> allMenus;
 
     public UserMainUI() {
         setTitle("카페 키오스크");
@@ -21,11 +25,11 @@ public class UserMainUI extends JFrame {
 
         // 전체 메뉴 목록
         allMenus = List.of(
-                new Menu("menu001", "아메리카노", 3000, "cate001", "/images/menu1.png", "진한 에스프레소와 물", OptionGroup.loadOptionGroups("menu001")),
-                new Menu("menu002", "카페라떼", 3500, "cate001", "/images/menu2.png", "에스프레소 + 스팀밀크", OptionGroup.loadOptionGroups("menu002")),
-                new Menu("menu003", "바닐라라떼", 4000, "cate001", "/images/menu3.png", "바닐라향 가득한 라떼", OptionGroup.loadOptionGroups("menu003")),
-                new Menu("menu004", "아이스티", 3000, "cate002", "/images/menu4.png", "상큼한 아이스티", OptionGroup.loadOptionGroups("menu004")),
-                new Menu("menu005", "허브티", 3200, "cate002", "/images/menu5.png", "편안한 허브향", OptionGroup.loadOptionGroups("menu005"))
+                new common.Menu("menu001", "아메리카노", 3000, "cate001", "/images/menu1.png", "진한 에스프레소와 물", OptionGroup.loadOptionGroups("menu001")),
+                new common.Menu("menu002", "카페라떼", 3500, "cate001", "/images/menu2.png", "에스프레소 + 스팀밀크", OptionGroup.loadOptionGroups("menu002")),
+                new common.Menu("menu003", "바닐라라떼", 4000, "cate001", "/images/menu3.png", "바닐라향 가득한 라떼", OptionGroup.loadOptionGroups("menu003")),
+                new common.Menu("menu004", "아이스티", 3000, "cate002", "/images/menu4.png", "상큼한 아이스티", OptionGroup.loadOptionGroups("menu004")),
+                new common.Menu("menu005", "허브티", 3200, "cate002", "/images/menu5.png", "편안한 허브향", OptionGroup.loadOptionGroups("menu005"))
         );
 
         // === [상단] 카테고리 패널 ===
@@ -61,7 +65,7 @@ public class UserMainUI extends JFrame {
 
     private void displayMenusByCategory(String cateId) {
         menuPanel.removeAll();
-        List<Menu> filtered = (cateId == null)
+        List<common.Menu> filtered = (cateId == null)
                 ? allMenus
                 : allMenus.stream().filter(m -> m.cateId().equals(cateId)).collect(Collectors.toList());
 

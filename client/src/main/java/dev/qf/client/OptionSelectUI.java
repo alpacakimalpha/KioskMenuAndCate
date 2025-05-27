@@ -1,4 +1,9 @@
-package common;
+package dev.qf.client;
+
+import common.Menu;
+import common.Option;
+import common.OptionGroup;
+import common.OrderItem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,7 +11,7 @@ import java.util.*;
 import java.util.List;
 
 public class OptionSelectUI extends JFrame {
-    private final Menu selectedMenu;
+    private final common.Menu selectedMenu;
     private final CartController cartController;
     private final OptionSelectionController optionController;
     private final UserMainUI parentUI;
