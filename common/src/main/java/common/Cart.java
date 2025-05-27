@@ -5,7 +5,21 @@ import it.unimi.dsi.fastutil.objects.Reference2IntLinkedOpenHashMap;
 import java.util.*;
 
 public class Cart {
-    private final Reference2IntLinkedOpenHashMap<OrderItem> items = new Reference2IntLinkedOpenHashMap<>();
+    public static final Cart EMPTY = new Cart() {
+        @Override
+        public void addItem(OrderItem item) {
+            throw new UnsupportedOperationException("Cannot add items to empty cart");
+        }
+    };
+    private final Reference2IntLinkedOpenHashMap<OrderItem> items;
+
+    public Cart() {
+        this(new Reference2IntLinkedOpenHashMap<>());
+    }
+
+    public Cart(Map<OrderItem, Integer> override) {
+        items = new Reference2IntLinkedOpenHashMap<>(override);
+    }
 
     public void addItem(OrderItem item) {
         items.merge(item, 1, Integer::sum);

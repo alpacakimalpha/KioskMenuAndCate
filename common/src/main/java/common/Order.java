@@ -1,7 +1,6 @@
 package common;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public record Order(
         int orderId,
@@ -10,10 +9,10 @@ public record Order(
         OrderStatus status,
         Cart cart
 ) {
-    public static final Order EMPTY = new Order(-1, "UNKNOWN", LocalDateTime.MIN, OrderStatus.대기중, Cart.EMPTY);
+    public static final Order EMPTY = new Order(-1, "UNKNOWN", LocalDateTime.MIN, OrderStatus.UNKNOWN, Cart.EMPTY);
 
     public Order(int orderId, String customer, LocalDateTime orderTime, OrderStatus status) {
-        this(orderId, customer, orderTime, status, new Cart(List.of()));
+        this(orderId, customer, orderTime, status, new Cart());
     }
 
     public Order withStatus(OrderStatus newStatus) {
