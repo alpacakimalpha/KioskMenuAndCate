@@ -4,6 +4,7 @@ import common.Cart;
 import common.Menu;
 import common.OptionGroup;
 import common.OrderItem;
+import common.registry.RegistryManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +34,7 @@ public class UserMainUI extends JFrame {
 //                new common.Menu("menu004", "아이스티", 3000, "cate002", Path.of("/images/menu4.png"), "상큼한 아이스티", OptionGroup.loadOptionGroups("menu004")),
 //                new common.Menu("menu005", "허브티", 3200, "cate002", Path.of("/images/menu5.png"), "편안한 허브향", OptionGroup.loadOptionGroups("menu005"))
 //        );
+        allMenus = List.of();
 
         // === [상단] 카테고리 패널 ===
         JPanel categoryPanel = new JPanel(new FlowLayout());
@@ -67,9 +69,9 @@ public class UserMainUI extends JFrame {
 
     private void displayMenusByCategory(String cateId) {
         menuPanel.removeAll();
-        List<common.Menu> filtered = (cateId == null)
+        List<Menu> filtered = (cateId == null)
                 ? allMenus
-                : allMenus.stream().filter(m -> m.category().equals(cateId)).collect(Collectors.toList());
+                : RegistryManager.CATEGORIES.getById(cateId).get().menus();
 
         for (Menu menu : filtered) {
             JPanel menuItemPanel = new JPanel();
