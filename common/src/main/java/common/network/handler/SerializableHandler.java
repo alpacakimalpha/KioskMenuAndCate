@@ -9,9 +9,7 @@ import common.network.handler.factory.PacketListenerFactory;
 import common.network.handler.listener.PacketListener;
 import common.network.packet.SidedPacket;
 import common.util.Container;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -80,10 +78,12 @@ public class SerializableHandler extends SimpleChannelInboundHandler<SidedPacket
         this.channel.pipeline().addBefore("encoder", "encrypt", new PacketEncryptor(encryptionCipher));
     }
 
-    public void send(Serializable<?> packet) {
+    @Nullable
+    public ChannelFuture send(Serializable<?> packet) {
         if (this.channel != null && this.channel.isOpen()) {
-            this.channel.writeAndFlush(packet);
+            return this.channel.writeAndFlush(packet).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
         }
+        return null;
     }
 
     public void setId(String id) {
