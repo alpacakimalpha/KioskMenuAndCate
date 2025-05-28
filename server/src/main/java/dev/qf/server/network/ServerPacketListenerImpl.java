@@ -1,23 +1,24 @@
 package dev.qf.server.network;
 
 import common.KioskLoggerFactory;
-import common.network.handler.server.ServerPacketListener;
+import common.network.handler.SerializableHandler;
+import common.network.handler.listener.ServerPacketListener;
 import common.network.packet.HandShakeC2SInfo;
 import common.network.packet.SidedPacket;
 import common.network.packet.UpdateDataPacket;
-import io.netty.channel.Channel;
 import org.slf4j.Logger;
 
 public class ServerPacketListenerImpl implements ServerPacketListener {
-    private Channel channel;
+    private SerializableHandler handler;
     private final Logger logger = KioskLoggerFactory.getLogger();
 
-    public ServerPacketListenerImpl(Channel channel) {
-        this.channel = channel;
+    public ServerPacketListenerImpl(SerializableHandler handler) {
+        this.handler = handler;
     }
 
     @Override
     public void onHandShake(HandShakeC2SInfo packet) {
+        handler.setId(packet.id());
         logger.info("HandShake received");
     }
 
@@ -32,7 +33,7 @@ public class ServerPacketListenerImpl implements ServerPacketListener {
     }
 
     @Override
-    public Channel getChannel() {
-        return this.channel;
+    public SerializableHandler getHandler() {
+        return this.handler;
     }
 }
