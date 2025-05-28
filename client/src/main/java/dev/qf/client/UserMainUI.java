@@ -2,16 +2,13 @@ package dev.qf.client;
 
 import common.Cart;
 import common.Menu;
-import common.OptionGroup;
 import common.OrderItem;
 import common.registry.RegistryManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class UserMainUI extends JFrame {
     private final Cart cart = new Cart();
