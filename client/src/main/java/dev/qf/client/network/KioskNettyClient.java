@@ -61,7 +61,7 @@ public class KioskNettyClient implements Connection {
 
     @Override
     public ChannelFuture sendSerializable(String id, Serializable<?> serializable) {
-        return null;
+        return channel.writeAndFlush(serializable).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
     }
 
     @Override
