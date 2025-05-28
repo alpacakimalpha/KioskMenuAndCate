@@ -9,8 +9,6 @@ import org.jetbrains.annotations.ApiStatus;
 
 public interface Connection {
     void run();
-    void setChannel(Channel channel);
-    Channel getChannel();
     void shutdown();
     @ApiStatus.Internal
     default ChannelInitializer<Channel> initializeChannelInitializer(SidedPacket.Side side) {
@@ -26,11 +24,12 @@ public interface Connection {
 
                 ChannelPipeline pipeline = ch.pipeline();
 
-                pipeline.addLast("serializable_decoder", new SerializableDecoder());
+                pipeline.addLast("decoder", new SerializableDecoder());
                 pipeline.addLast("encoder", new SerializableEncoder());
                 pipeline.addLast("handler", new SerializableHandler(side));
             }
         };
     }
-    ChannelFuture sendSerializable(Serializable<?> serializable);
+    ChannelFuture sendSerializable(String id, Serializable<?> serializable);
+    void handleDisconnect(ChannelHandlerContext ctx);
 }
