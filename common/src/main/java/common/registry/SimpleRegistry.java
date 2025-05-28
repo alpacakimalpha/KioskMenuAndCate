@@ -1,7 +1,7 @@
 package common.registry;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
-import common.network.Serializable;
 import common.network.SynchronizeData;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceMap;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
@@ -81,6 +81,11 @@ public class SimpleRegistry<T extends SynchronizeData<?>> implements Registry<T>
     @Override
     public @NotNull Codec<T> getCodec() {
         return this.codec;
+    }
+
+    @Override
+    public List<T> getAll() {
+        return ImmutableList.copyOf(this.ITEMS);
     }
 
     @Override
