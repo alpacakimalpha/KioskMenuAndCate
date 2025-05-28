@@ -7,7 +7,7 @@ public class NetworkConnectionTest {
     @Test
     public void testNetworkConnection() throws InterruptedException {
         Main.INSTANCE.run();
-        var future = Main.INSTANCE.sendSerializable(new HandShakeC2SInfo("test"));
+        var future = Main.INSTANCE.sendSerializable("server", new HandShakeC2SInfo("test"));
 
         while(!future.isDone()) {
             Thread.sleep(100);
