@@ -2,7 +2,6 @@ package dev.qf.server;
 
 import common.KioskLoggerFactory;
 import common.network.Connection;
-import common.network.handler.PacketListener;
 import common.network.handler.factory.PacketListenerFactory;
 import common.util.Container;
 import dev.qf.server.network.KioskNettyServer;
@@ -16,4 +15,5 @@ public class Main {
 
         INSTANCE.run();
     }
+
 }
