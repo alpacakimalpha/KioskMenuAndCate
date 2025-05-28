@@ -42,8 +42,6 @@ public class KioskNettyClient implements Connection {
             bootstrap.handler(this.initializeChannelInitializer(SidedPacket.Side.CLIENT));
 
             this.setChannel(bootstrap.connect("localhost", port).syncUninterruptibly().channel());
-
-
     }
 
     public void shutdown() {
@@ -62,20 +60,26 @@ public class KioskNettyClient implements Connection {
     }
 
     @Override
+    public ChannelFuture sendSerializable(String id, Serializable<?> serializable) {
+        return null;
+    }
+
+    @Override
+    public void handleDisconnect(ChannelHandlerContext ctx) {
+
+    }
+
     public ChannelFuture sendSerializable(Serializable<?> serializable) {
         return this.channel.writeAndFlush(serializable).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
     }
 
-    @Override
     public void setChannel(Channel channel) {
         this.channel = channel;
     }
 
-    @Override
     public Channel getChannel() {
         return this.channel;
     }
-
     public ChannelFuture connect(String host, int port) {
         return bootstrap.connect(host, port).syncUninterruptibly();
     }
