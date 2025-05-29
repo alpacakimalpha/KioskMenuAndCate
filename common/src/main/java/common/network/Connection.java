@@ -7,6 +7,8 @@ import common.network.packet.SidedPacket;
 import io.netty.channel.*;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.util.List;
+
 public interface Connection {
     void run();
     void shutdown();
@@ -18,6 +20,7 @@ public interface Connection {
             protected void initChannel(Channel ch) throws Exception {
                 try {
                     ch.setOption(ChannelOption.TCP_NODELAY, true);
+                    ch.setOption(ChannelOption.SO_KEEPALIVE, true);
                 } catch (Exception ignored) {
                     // NOP
                 }
@@ -31,5 +34,7 @@ public interface Connection {
         };
     }
     ChannelFuture sendSerializable(String id, Serializable<?> serializable);
-    void handleDisconnect(ChannelHandlerContext ctx);
+    void handleDisconnect(ChannelHandlerContext ctx, SerializableHandler handler);
+    void onEstablishedChannel(ChannelHandlerContext ctx, SerializableHandler handler);
+    List<SerializableHandler> getHandlers();
 }
