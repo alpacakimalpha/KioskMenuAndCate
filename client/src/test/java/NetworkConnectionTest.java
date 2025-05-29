@@ -1,8 +1,10 @@
 import common.network.Connection;
 import common.network.packet.HandShakeC2SInfo;
+import common.network.packet.UpdateDataPacket;
 import common.util.Container;
 import dev.qf.client.Main;
 import dev.qf.client.network.KioskNettyClient;
+import io.netty.channel.ChannelFuture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +26,10 @@ public class NetworkConnectionTest {
 //            Thread.sleep(1000);
 //        }
         Thread.sleep(1000);
+
+        ChannelFuture itemRequest = client.sendSerializable(new UpdateDataPacket.RequestDataC2SPacket("options"));
+
+        Thread.sleep(2000);
         Assertions.assertTrue(future.isSuccess());
     }
 }
