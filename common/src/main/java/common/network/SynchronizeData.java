@@ -9,4 +9,5 @@ public interface SynchronizeData<T extends SynchronizeData<?>> {
     default JsonElement toJson() {
        return getSyncCodec().encodeStart(JsonOps.INSTANCE, (T) this).getOrThrow();
     }
+    String getRegistryElementId();
 }

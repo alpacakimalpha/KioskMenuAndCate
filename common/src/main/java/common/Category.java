@@ -20,4 +20,9 @@ public record Category(String cateId, String cateName, List<Menu> menus) impleme
     public Codec<Category> getSyncCodec() {
         return SYNC_CODEC;
     }
+
+    @Override
+    public String getRegistryElementId() {
+        return this.cateId;
+    }
 }

@@ -25,4 +25,9 @@ public record Option(String id, String name, int extraCost) implements Synchroni
     public Codec<Option> getSyncCodec() {
         return SYNC_CODEC;
     }
+
+    @Override
+    public String getRegistryElementId() {
+        return this.id;
+    }
 }
