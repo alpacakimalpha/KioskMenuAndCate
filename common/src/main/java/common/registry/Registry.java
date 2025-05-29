@@ -5,6 +5,7 @@ import common.network.SynchronizeData;
 import common.util.IndexIterable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface Registry<T extends SynchronizeData<?>> extends IndexIterable<T> {
@@ -16,4 +17,5 @@ public interface Registry<T extends SynchronizeData<?>> extends IndexIterable<T>
     T add(String id, T entry);
     @NotNull
     Codec<T> getCodec();
+    List<T> getAll();
 }

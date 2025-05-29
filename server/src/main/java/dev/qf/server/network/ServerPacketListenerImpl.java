@@ -1,24 +1,36 @@
 package dev.qf.server.network;
 
-import common.KioskLoggerFactory;
-import common.network.handler.server.ServerPacketListener;
-import common.network.packet.HandShakeC2SInfo;
-import common.network.packet.SidedPacket;
-import common.network.packet.UpdateDataPacket;
-import io.netty.channel.Channel;
+import com.google.common.primitives.Ints;
+import common.network.encryption.NetworkEncryptionUtils;
+import common.network.packet.*;
+import common.util.KioskLoggerFactory;
+import common.network.handler.SerializableHandler;
+import common.network.handler.listener.ServerPacketListener;
 import org.slf4j.Logger;
 
-public class ServerPacketListenerImpl implements ServerPacketListener {
-    private Channel channel;
-    private final Logger logger = KioskLoggerFactory.getLogger();
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import java.security.PrivateKey;
+import java.util.Random;
+import java.util.random.RandomGenerator;
 
-    public ServerPacketListenerImpl(Channel channel) {
-        this.channel = channel;
+public class ServerPacketListenerImpl implements ServerPacketListener {
+    private SerializableHandler handler;
+    private final Logger logger = KioskLoggerFactory.getLogger();
+    private final byte[] nonce;
+
+    public ServerPacketListenerImpl(SerializableHandler handler) {
+        this.handler = handler;
+        this.nonce = Ints.toByteArray(RandomGenerator.of("Xoroshiro128PlusPlus").nextInt());
     }
 
     @Override
     public void onHandShake(HandShakeC2SInfo packet) {
+        handler.setId(packet.id());
         logger.info("HandShake received");
+        KioskNettyServer server = (KioskNettyServer) handler.connection;
+        this.handler.send(new HelloS2CPacket(server.getKeyPair().getPublic().getEncoded(), nonce));
+        logger.info("Hello sent nonce : {}", nonce);
     }
 
     @Override
@@ -27,12 +39,33 @@ public class ServerPacketListenerImpl implements ServerPacketListener {
     }
 
     @Override
+    public void onKeyReceived(KeyC2SPacket packet) {
+        try {
+            KioskNettyServer server = (KioskNettyServer) handler.connection;
+            PrivateKey privateKey = server.getKeyPair().getPrivate();
+            Logger logger = KioskLoggerFactory.getLogger();
+           if (!packet.verifySignedNonce(this.nonce, privateKey)) {
+                throw new IllegalStateException("Invalid nonce");
+            }
+
+
+            SecretKey secretKey = packet.decryptSecretKey(privateKey);
+            Cipher encryptCipher = NetworkEncryptionUtils.cipherFromKey(Cipher.ENCRYPT_MODE, secretKey);
+            Cipher decryptCipher = NetworkEncryptionUtils.cipherFromKey(Cipher.DECRYPT_MODE, secretKey);
+
+            this.handler.encrypt(encryptCipher, decryptCipher);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public SidedPacket.Side getSide() {
         return SidedPacket.Side.SERVER;
     }
 
     @Override
-    public Channel getChannel() {
-        return this.channel;
+    public SerializableHandler getHandler() {
+        return this.handler;
     }
 }

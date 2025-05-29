@@ -1,8 +1,8 @@
 package common.network.handler.factory;
 
-import common.network.handler.PacketListener;
-import io.netty.channel.Channel;
+import common.network.handler.listener.PacketListener;
+import common.network.handler.SerializableHandler;
 
 public interface PacketListenerFactory {
-    PacketListener getPacketListener(Channel channel);
+    PacketListener getPacketListener(SerializableHandler handler);
 }

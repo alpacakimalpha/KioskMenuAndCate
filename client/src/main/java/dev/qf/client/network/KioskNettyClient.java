@@ -1,9 +1,10 @@
 package dev.qf.client.network;
 
-import common.KioskLoggerFactory;
+import common.util.KioskLoggerFactory;
 import common.network.Connection;
 import common.network.Serializable;
 import common.network.SerializableManager;
+import common.network.handler.SerializableHandler;
 import common.network.handler.factory.PacketListenerFactory;
 import common.network.packet.SidedPacket;
 import common.util.Container;
@@ -14,13 +15,15 @@ import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 
+import java.util.List;
+
 public class KioskNettyClient implements Connection {
     private static final int port = 8192;
     private final MultiThreadIoEventLoopGroup CHANNEL = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 
     private Bootstrap bootstrap;
     public static final Logger LOGGER = KioskLoggerFactory.getLogger();
-    private Channel channel;
+    private SerializableHandler handler;
 
     public KioskNettyClient() {
         if (Main.INSTANCE != null) {
@@ -41,16 +44,14 @@ public class KioskNettyClient implements Connection {
 
             bootstrap.handler(this.initializeChannelInitializer(SidedPacket.Side.CLIENT));
 
-            this.setChannel(bootstrap.connect("localhost", port).syncUninterruptibly().channel());
-
-
+            bootstrap.connect("localhost", port).syncUninterruptibly().channel();
     }
 
     public void shutdown() {
         LOGGER.info("Shutting down client...");
-        if (channel != null && channel.isOpen()) {
+        if (handler != null && handler.channel.isOpen()) {
             try {
-                channel.close().syncUninterruptibly();
+                handler.channel.close().syncUninterruptibly();
             } catch (Exception e) {
                 LOGGER.warn("Exception while closing client channel", e);
             }
@@ -62,18 +63,32 @@ public class KioskNettyClient implements Connection {
     }
 
     @Override
+    public ChannelFuture sendSerializable(String id, Serializable<?> serializable) {
+        return handler.send(serializable).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+    }
+
+    public boolean isConnected() {
+        return handler != null && handler.channel != null && handler.channel.isOpen();
+    }
+
+    @Override
+    public void handleDisconnect(ChannelHandlerContext ctx, SerializableHandler handler) {
+        this.handler = null;
+    }
+
+    @Override
+    public void onEstablishedChannel(ChannelHandlerContext ctx, SerializableHandler handler) {
+        LOGGER.info("Connection is established. : {}", ctx.channel().remoteAddress());
+        this.handler = handler;
+    }
+
+    @Override
+    public List<SerializableHandler> getHandlers() {
+        return handler != null ? List.of(handler) : List.of();
+    }
+
     public ChannelFuture sendSerializable(Serializable<?> serializable) {
-        return this.channel.writeAndFlush(serializable).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
-    }
-
-    @Override
-    public void setChannel(Channel channel) {
-        this.channel = channel;
-    }
-
-    @Override
-    public Channel getChannel() {
-        return this.channel;
+        return this.handler.send(serializable);
     }
 
     public ChannelFuture connect(String host, int port) {

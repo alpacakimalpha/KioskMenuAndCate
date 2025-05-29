@@ -1,5 +1,8 @@
+import common.network.Connection;
 import common.network.packet.HandShakeC2SInfo;
+import common.util.Container;
 import dev.qf.client.Main;
+import dev.qf.client.network.KioskNettyClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -7,11 +10,20 @@ public class NetworkConnectionTest {
     @Test
     public void testNetworkConnection() throws InterruptedException {
         Main.INSTANCE.run();
-        var future = Main.INSTANCE.sendSerializable(new HandShakeC2SInfo("test"));
-
-        while(!future.isDone()) {
+        KioskNettyClient client = (KioskNettyClient) Container.get(Connection.class);
+        while(!client.isConnected()) {
             Thread.sleep(100);
         }
+        var future = Main.INSTANCE.sendSerializable("server", new HandShakeC2SInfo("test"));
+
+        while(client.isConnected() && !client.getHandlers().getFirst().isEncrypted()) {
+            Thread.sleep(3000);
+        }
+//
+//        while(true) {
+//            Thread.sleep(1000);
+//        }
+        Thread.sleep(1000);
         Assertions.assertTrue(future.isSuccess());
     }
 }

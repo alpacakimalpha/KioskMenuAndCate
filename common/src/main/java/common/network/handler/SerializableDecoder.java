@@ -1,11 +1,10 @@
 package common.network.handler;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
-import common.KioskLoggerFactory;
+import common.util.KioskLoggerFactory;
 import common.network.Serializable;
 import common.network.SerializableManager;
 import common.network.encoding.StringEncodings;
