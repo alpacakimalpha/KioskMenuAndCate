@@ -28,7 +28,11 @@ public class PacketEncryptionManager {
         int i = buf.readableBytes();
         byte[] bs = this.toByteArray(buf);
         ByteBuf byteBuf = ctx.alloc().heapBuffer(this.cipher.getOutputSize(i));
-        byteBuf.writerIndex(this.cipher.update(bs, 0, i, byteBuf.array(),byteBuf.arrayOffset()));
+        int bytesWritten = this.cipher.update(bs, 0, i, byteBuf.array(), byteBuf.arrayOffset());
+        if (bytesWritten < 0 || bytesWritten > byteBuf.capacity()) {
+            throw new IllegalStateException("Invalid number of bytes written by cipher.update: " + bytesWritten);
+        }
+        byteBuf.writerIndex(bytesWritten);
         return byteBuf;
     }
 
