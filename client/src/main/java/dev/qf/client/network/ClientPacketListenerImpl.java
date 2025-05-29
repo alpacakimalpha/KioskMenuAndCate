@@ -4,8 +4,11 @@ import common.network.encryption.NetworkEncryptionUtils;
 import common.network.handler.SerializableHandler;
 import common.network.handler.listener.ClientPacketListener;
 import common.network.packet.HelloS2CPacket;
+import common.network.packet.KeyC2SPacket;
 import common.network.packet.SidedPacket;
 import common.network.packet.UpdateDataPacket;
+import common.util.KioskLoggerFactory;
+import org.slf4j.Logger;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -13,6 +16,7 @@ import java.security.PublicKey;
 
 public class ClientPacketListenerImpl implements ClientPacketListener {
     private SerializableHandler handler;
+    private final Logger logger = KioskLoggerFactory.getLogger();
 
     public ClientPacketListenerImpl(SerializableHandler channel) {
         this.handler = channel;
@@ -32,11 +36,13 @@ public class ClientPacketListenerImpl implements ClientPacketListener {
         Cipher encrpytionCipher = NetworkEncryptionUtils.cipherFromKey(1, secretKey);
         Cipher decryptionCipher = NetworkEncryptionUtils.cipherFromKey(2, secretKey);
 
-        this.handler.channel.writeAndFlush(null); // TODO IMPLEMENT SEND PUBLIC KEY
+//        this.handler.send(); // TODO IMPLEMENT SEND PUBLIC KEY
+
+        KeyC2SPacket secretPacket = new KeyC2SPacket(secretKey, publicKey, packet.nonce());
+        logger.info("Client public key sent");
+        this.handler.send(secretPacket);
         this.handler.encrypt(encrpytionCipher, decryptionCipher);
-
-
-    }
+   }
 
     @Override
     public void onReceivedData(UpdateDataPacket.ResponseDataS2CPacket packet) {

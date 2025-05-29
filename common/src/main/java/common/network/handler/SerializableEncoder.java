@@ -1,6 +1,6 @@
 package common.network.handler;
 
-import common.KioskLoggerFactory;
+import common.util.KioskLoggerFactory;
 import common.network.Serializable;
 import common.network.encoding.StringEncodings;
 import io.netty.buffer.ByteBuf;

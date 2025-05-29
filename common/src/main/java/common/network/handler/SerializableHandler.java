@@ -1,6 +1,6 @@
 package common.network.handler;
 
-import common.KioskLoggerFactory;
+import common.util.KioskLoggerFactory;
 import common.network.Connection;
 import common.network.Serializable;
 import common.network.encryption.PacketDecryptor;
@@ -23,6 +23,7 @@ import javax.crypto.Cipher;
  * 또한 모든 핸들링은 비동기로 진핼됨을 유의하라.
  */
 public class SerializableHandler extends SimpleChannelInboundHandler<SidedPacket> {
+    public final Connection connection = Container.get(Connection.class);
     private static final Logger LOGGER = KioskLoggerFactory.getLogger();
     @Nullable
     private volatile PacketListener packetListener;
@@ -64,12 +65,13 @@ public class SerializableHandler extends SimpleChannelInboundHandler<SidedPacket
         super.channelActive(ctx);
         this.channel = ctx.channel();
         this.packetListener = Container.get(PacketListenerFactory.class).getPacketListener(this);
+        this.connection.onEstablishedChannel(ctx, this);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
-        Container.get(Connection.class).handleDisconnect(ctx);
+        this.connection.handleDisconnect(ctx, this);
     }
 
     public void encrypt(Cipher encryptionCipher, Cipher decryptionCipher) {
@@ -78,6 +80,11 @@ public class SerializableHandler extends SimpleChannelInboundHandler<SidedPacket
         this.channel.pipeline().addBefore("encoder", "encrypt", new PacketEncryptor(encryptionCipher));
     }
 
+    /**
+     *
+     * @param packet
+     * @return
+     */
     @Nullable
     public ChannelFuture send(Serializable<?> packet) {
         if (this.channel != null && this.channel.isOpen()) {

@@ -24,6 +24,13 @@ public final class HelloS2CPacket implements SidedPacket<ClientPacketListener> {
     public HelloS2CPacket(Byte[] publicKey, Byte[] nonce) {
         this.publicKey = JavaCodecs.asByteArray(publicKey);
         this.nonce = JavaCodecs.asByteArray(nonce);
+        this.nonceAsByte = nonce;
+        this.publicKeyAsByte = publicKey;
+    }
+
+    public HelloS2CPacket(byte[] publicKey, byte[] nonce) {
+        this.publicKey = publicKey;
+        this.nonce = nonce;
     }
 
     @Override
