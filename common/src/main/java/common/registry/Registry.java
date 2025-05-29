@@ -1,6 +1,7 @@
 package common.registry;
 
 import com.mojang.serialization.Codec;
+import common.network.Serializable;
 import common.network.SynchronizeData;
 import common.util.IndexIterable;
 import org.jetbrains.annotations.NotNull;
@@ -14,8 +15,9 @@ public interface Registry<T extends SynchronizeData<?>> extends IndexIterable<T>
     boolean isFrozen();
     void freeze();
     void unfreeze();
-    T add(String id, T entry);
+    T add(String id, SynchronizeData<?> entry);
     @NotNull
     Codec<T> getCodec();
     List<T> getAll();
+    Class<T> getClazz();
 }
