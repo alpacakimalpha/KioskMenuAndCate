@@ -1,5 +1,7 @@
 package dev.qf.client.network;
 
+import common.network.Serializable;
+import common.network.SynchronizeData;
 import common.network.encryption.NetworkEncryptionUtils;
 import common.network.handler.SerializableHandler;
 import common.network.handler.listener.ClientPacketListener;
@@ -7,6 +9,8 @@ import common.network.packet.HelloS2CPacket;
 import common.network.packet.KeyC2SPacket;
 import common.network.packet.SidedPacket;
 import common.network.packet.UpdateDataPacket;
+import common.registry.Registry;
+import common.registry.RegistryManager;
 import common.util.KioskLoggerFactory;
 import org.slf4j.Logger;
 
@@ -46,7 +50,15 @@ public class ClientPacketListenerImpl implements ClientPacketListener {
 
     @Override
     public void onReceivedData(UpdateDataPacket.ResponseDataS2CPacket packet) {
+        logger.info("Received data : {}", packet.registryId());
+        Registry<? extends SynchronizeData<?>> registry =  RegistryManager.getAsId(packet.registryId());
+        if (registry == null) {
+            logger.error("Received data from unknown registry : {}", packet.registryId());
+        }
 
+        packet.data().forEach(data -> {
+            registry.add(data.getRegistryElementId(),(SynchronizeData<?>) data);
+        });
     }
 
     @Override

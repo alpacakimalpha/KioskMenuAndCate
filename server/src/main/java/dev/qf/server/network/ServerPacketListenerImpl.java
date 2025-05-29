@@ -1,8 +1,11 @@
 package dev.qf.server.network;
 
 import com.google.common.primitives.Ints;
+import common.network.SynchronizeData;
 import common.network.encryption.NetworkEncryptionUtils;
 import common.network.packet.*;
+import common.registry.Registry;
+import common.registry.RegistryManager;
 import common.util.KioskLoggerFactory;
 import common.network.handler.SerializableHandler;
 import common.network.handler.listener.ServerPacketListener;
@@ -11,6 +14,7 @@ import org.slf4j.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import java.security.PrivateKey;
+import java.util.List;
 import java.util.Random;
 import java.util.random.RandomGenerator;
 
@@ -35,7 +39,19 @@ public class ServerPacketListenerImpl implements ServerPacketListener {
 
     @Override
     public void onRequestData(UpdateDataPacket.RequestDataC2SPacket packet) {
+        if (!this.handler.isEncrypted()) {
+            throw new IllegalStateException("Client is not encrypted");
+        }
+        logger.info("RequestData received : {}", packet.registryId());
+        Registry<?> registry = RegistryManager.getAsId(packet.registryId());
 
+        if (registry == null) {
+            logger.warn("Registry {} not found", packet.registryId());
+            logger.warn("skipping this packet...");
+            return;
+        }
+        UpdateDataPacket.ResponseDataS2CPacket response = new UpdateDataPacket.ResponseDataS2CPacket(packet.registryId(), (List<SynchronizeData<?>>) registry.getAll());
+        this.handler.send(response);
     }
 
     @Override
