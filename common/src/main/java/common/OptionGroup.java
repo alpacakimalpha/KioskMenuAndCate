@@ -87,4 +87,9 @@ public record OptionGroup(
     public Codec<OptionGroup> getSyncCodec() {
         return SYNC_CODEC;
     }
+
+    @Override
+    public String getRegistryElementId() {
+        return this.id;
+    }
 }

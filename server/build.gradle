@@ -1,4 +1,5 @@
 dependencies {
     implementation(project(path: ':common'))
     implementation("com.zaxxer:HikariCP:6.3.0")
+    implementation("net.sf.jopt-simple:jopt-simple:6.0-alpha-3")
 }

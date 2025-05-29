@@ -32,4 +32,9 @@ public record Menu(String id, String name, int price, Path imagePath,
     public Codec<Menu> getSyncCodec() {
         return SYNC_CODEC;
     }
+
+    @Override
+    public String getRegistryElementId() {
+        return this.id;
+    }
 }
