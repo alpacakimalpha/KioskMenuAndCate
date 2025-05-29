@@ -68,7 +68,7 @@ public class SimpleRegistry<T extends SynchronizeData<?>> implements Registry<T>
 
     @Override
     public T add(String id, SynchronizeData<?> entry) {
-        if (!entry.getClass().isAssignableFrom(clazz)) {
+        if (!clazz.isAssignableFrom(entry.getClass())) {
             throw new IllegalArgumentException("Entry is not of type " + clazz.getName());
         }
         try {
