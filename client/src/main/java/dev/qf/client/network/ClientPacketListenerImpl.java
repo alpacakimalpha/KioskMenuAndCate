@@ -37,8 +37,8 @@ public class ClientPacketListenerImpl implements ClientPacketListener {
         SecretKey secretKey = NetworkEncryptionUtils.generateSecretKey();
         PublicKey publicKey = packet.getPublicKey();
 
-        Cipher encrpytionCipher = NetworkEncryptionUtils.cipherFromKey(1, secretKey);
-        Cipher decryptionCipher = NetworkEncryptionUtils.cipherFromKey(2, secretKey);
+        Cipher encrpytionCipher = NetworkEncryptionUtils.cipherFromKey(Cipher.ENCRYPT_MODE, secretKey);
+        Cipher decryptionCipher = NetworkEncryptionUtils.cipherFromKey(Cipher.DECRYPT_MODE, secretKey);
 
 //        this.handler.send(); // TODO IMPLEMENT SEND PUBLIC KEY
 
@@ -57,7 +57,7 @@ public class ClientPacketListenerImpl implements ClientPacketListener {
         }
 
         packet.data().forEach(data -> {
-            registry.add(data.getRegistryElementId(),(SynchronizeData<?>) data);
+            registry.add(data.getRegistryElementId(), data);
         });
     }
 

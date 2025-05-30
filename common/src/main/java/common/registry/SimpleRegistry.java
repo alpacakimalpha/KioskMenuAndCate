@@ -18,6 +18,11 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * {@link Registry}의 구현형 클래스이다. 특정한 레지스트리가 필요하지 않는다면 이 레지스트리를 사용하면 된다.
+ * 레지스트리는 기본적으로 thread-safe 하게 작성되어야 한다. 가장 교착상태가 예상되는 클래스로, 나는 {@link ReentrantLock} 을 통해 동시성을 제어했다.
+ * @param <T> 저장할 데이터 자료형
+ */
 public class SimpleRegistry<T extends SynchronizeData<?>> implements Registry<T> {
     private static final Logger LOGGER = KioskLoggerFactory.getLogger();
     private final Map<String, T> idToEntry = new Object2ObjectOpenHashMap<>();

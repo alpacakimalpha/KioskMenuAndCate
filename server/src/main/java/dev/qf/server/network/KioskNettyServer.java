@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import java.security.KeyPair;
 import java.util.*;
 
-public class KioskNettyServer implements Connection {
+public final class KioskNettyServer implements Connection {
     //TODO MOVE TO CONFIG
     private static final int port = 8192;
     private final MultiThreadIoEventLoopGroup BOSS = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
@@ -38,7 +38,7 @@ public class KioskNettyServer implements Connection {
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
-    protected void generateKeyPair() {
+    private void generateKeyPair() {
         LOGGER.info("Generating key pair...");
          keyPair = ServerNetworkEncryptionUtils.generateKeyPair();
     }

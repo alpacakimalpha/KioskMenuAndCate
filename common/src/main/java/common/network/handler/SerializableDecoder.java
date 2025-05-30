@@ -12,11 +12,17 @@ import common.util.JsonHelper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * {@link ByteBuf}를 {@link JsonObject}로 변환하고 다시 이를 {@link Serializable}로 변경한다. <br>
+ * {@link Serializable} 은 우리가 말하는 패킷으로, 실제 자료가 저장된 패킷을 의미한다.
+ */
+@ApiStatus.Internal
 public class SerializableDecoder extends ByteToMessageDecoder {
     private static final Logger LOGGER = KioskLoggerFactory.getLogger();
     public static Gson gson = new Gson();

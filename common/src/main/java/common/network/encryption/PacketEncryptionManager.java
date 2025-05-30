@@ -11,7 +11,7 @@ public class PacketEncryptionManager {
     private byte[] conversionBuffer = new byte[0];
     private byte[] encryptionBuffer = new byte[0];
 
-    protected PacketEncryptionManager(Cipher cipher) {
+    PacketEncryptionManager(Cipher cipher) {
         this.cipher = cipher;
     }
 
