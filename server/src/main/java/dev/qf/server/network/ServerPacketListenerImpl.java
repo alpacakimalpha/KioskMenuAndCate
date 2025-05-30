@@ -15,11 +15,10 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import java.security.PrivateKey;
 import java.util.List;
-import java.util.Random;
 import java.util.random.RandomGenerator;
 
 public class ServerPacketListenerImpl implements ServerPacketListener {
-    private SerializableHandler handler;
+    private final SerializableHandler handler;
     private final Logger logger = KioskLoggerFactory.getLogger();
     private final byte[] nonce;
 
@@ -59,7 +58,6 @@ public class ServerPacketListenerImpl implements ServerPacketListener {
         try {
             KioskNettyServer server = (KioskNettyServer) handler.connection;
             PrivateKey privateKey = server.getKeyPair().getPrivate();
-            Logger logger = KioskLoggerFactory.getLogger();
            if (!packet.verifySignedNonce(this.nonce, privateKey)) {
                 throw new IllegalStateException("Invalid nonce");
             }
