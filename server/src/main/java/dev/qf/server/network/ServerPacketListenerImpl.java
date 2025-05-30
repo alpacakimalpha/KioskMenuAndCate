@@ -9,6 +9,7 @@ import common.registry.RegistryManager;
 import common.util.KioskLoggerFactory;
 import common.network.handler.SerializableHandler;
 import common.network.handler.listener.ServerPacketListener;
+import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 
 import javax.crypto.Cipher;
@@ -17,6 +18,7 @@ import java.security.PrivateKey;
 import java.util.List;
 import java.util.random.RandomGenerator;
 
+@ApiStatus.Internal
 public class ServerPacketListenerImpl implements ServerPacketListener {
     private final SerializableHandler handler;
     private final Logger logger = KioskLoggerFactory.getLogger();

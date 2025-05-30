@@ -9,6 +9,10 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 
+/**
+ * 각 사이드의 네트워크 구현체가 상속하는 인터페이스이다. 해당 인터페이스에는 실행, 셧다운, 연결된 핸들러 획득, 채널 파이프라인 설정 메소드가 정의되어 있다.
+ */
+@ApiStatus.NonExtendable
 public interface Connection {
     void run();
     void shutdown();

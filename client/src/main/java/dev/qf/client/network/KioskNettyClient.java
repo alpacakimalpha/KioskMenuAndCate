@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 
 import java.util.List;
 
-public class KioskNettyClient implements Connection {
+public final class KioskNettyClient implements Connection {
     private static final int port = 8192;
     private final MultiThreadIoEventLoopGroup CHANNEL = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 

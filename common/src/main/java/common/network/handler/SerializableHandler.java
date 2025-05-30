@@ -19,7 +19,7 @@ import javax.crypto.Cipher;
  * Client, Server 에 모두 사용되는 Handler 클래스이고, 싱글톤으로 작동하는 클래스가 아닌지 생각이 들 수도 있곘지만 아님을 유의하라. <br>
  * 해당 핸들러는 소켓과 바인드 될 때 생성된다. 이 뜻은 해당 시스템의 클라이언트에서는 한개의 핸드러만 존재할 수 있으나, 서버는 아니다. <br>
  * 서버는 여러 클라이언트와 연결될 수 있음을 유의하라. 이 경우 서버는 각 클라이언트 마다 handler 를 가지게 된다. <br>
- * 이러한 이유로 <code>PacketListener</code> 도 싱글톤이 아니다.<br>
+ * 이러한 이유로 {@link PacketListener} 도 싱글톤이 아니다.<br>
  * 또한 모든 핸들링은 비동기로 진핼됨을 유의하라.
  */
 public class SerializableHandler extends SimpleChannelInboundHandler<SidedPacket> {
