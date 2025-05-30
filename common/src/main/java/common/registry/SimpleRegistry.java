@@ -121,7 +121,9 @@ public class SimpleRegistry<T extends SynchronizeData<?>> implements Registry<T>
 
     @Override
     public int size() {
-        return this.ITEMS.size();
+        synchronized (lock) {
+            return this.ITEMS.size();
+        }
     }
 
     @Override
