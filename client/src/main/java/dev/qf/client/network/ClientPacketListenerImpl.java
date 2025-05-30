@@ -51,6 +51,7 @@ public class ClientPacketListenerImpl implements ClientPacketListener {
     @Override
     public void onReceivedData(UpdateDataPacket.ResponseDataS2CPacket packet) {
         logger.info("Received data : {}", packet.registryId());
+        logger.info("data info : {}", packet);
         Registry<? extends SynchronizeData<?>> registry =  RegistryManager.getAsId(packet.registryId());
         if (registry == null) {
             logger.error("Received data from unknown registry : {}", packet.registryId());

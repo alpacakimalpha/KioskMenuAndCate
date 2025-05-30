@@ -4,6 +4,7 @@ import common.Menu;
 import common.Option;
 import common.OptionGroup;
 import common.OrderItem;
+import common.registry.RegistryManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,7 @@ public class OptionSelectUI extends JFrame {
         setSize(300, 400);
         setLayout(new BorderLayout());
 
-        List<OptionGroup> optionGroups = OptionGroup.loadOptionGroups(menu.id());
+        List<OptionGroup> optionGroups = RegistryManager.OPTION_GROUPS.getAll();
 
         JPanel optionPanel = new JPanel(new GridLayout(0, 1));
         for (OptionGroup group : optionGroups) {
