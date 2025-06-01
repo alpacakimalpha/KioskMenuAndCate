@@ -1,6 +1,7 @@
 package common.network;
 
 import common.network.handler.*;
+import common.network.packet.Serializable;
 import common.network.packet.SidedPacket;
 import io.netty.channel.*;
 import io.netty.handler.flow.FlowControlHandler;

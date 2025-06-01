@@ -2,13 +2,12 @@ package dev.qf.client.network;
 
 import common.util.KioskLoggerFactory;
 import common.network.Connection;
-import common.network.Serializable;
+import common.network.packet.Serializable;
 import common.network.SerializableManager;
 import common.network.handler.SerializableHandler;
 import common.network.handler.factory.PacketListenerFactory;
 import common.network.packet.SidedPacket;
 import common.util.Container;
-import dev.qf.client.Main;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioIoHandler;
