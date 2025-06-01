@@ -1,9 +1,10 @@
-package common.network;
+package common.network.packet;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
+import common.network.SerializableManager;
 import org.jetbrains.annotations.NotNull;
 
 /**

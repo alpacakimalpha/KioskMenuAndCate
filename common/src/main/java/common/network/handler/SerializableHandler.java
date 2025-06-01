@@ -2,7 +2,7 @@ package common.network.handler;
 
 import common.util.KioskLoggerFactory;
 import common.network.Connection;
-import common.network.Serializable;
+import common.network.packet.Serializable;
 import common.network.encryption.PacketDecryptor;
 import common.network.encryption.PacketEncryptor;
 import common.network.handler.factory.PacketListenerFactory;
