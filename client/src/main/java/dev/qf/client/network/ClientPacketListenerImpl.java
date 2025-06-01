@@ -47,6 +47,9 @@ public class ClientPacketListenerImpl implements ClientPacketListener {
 
     @Override
     public void onReceivedData(UpdateDataPacket.ResponseDataS2CPacket packet) {
+        if (!this.handler.isEncrypted()) {
+            throw new IllegalStateException("Client is not encrypted");
+        }
         logger.info("Received data : {}", packet.registryId());
         logger.info("data info : {}", packet);
         Registry<? extends SynchronizeData<?>> registry =  RegistryManager.getAsId(packet.registryId());
@@ -61,6 +64,13 @@ public class ClientPacketListenerImpl implements ClientPacketListener {
     @Override
     public void onEncryptCompleted(EncryptCompleteS2CPacket packet) {
         handler.send(new UpdateDataPacket.RequestDataC2SPacket("all"));
+    }
+
+    @Override
+    public void onVerifyPurchaseResult(VerifyPurchasePackets.VerifyPurchaseResultS2CPacket packet) {
+        if (!this.handler.isEncrypted()) {
+            throw new IllegalStateException("Client is not encrypted");
+        }
     }
 
     @Override

@@ -62,5 +62,6 @@ public class SerializableManager {
         register("key_c2s_packet", KeyC2SPacket.CODEC);
         register("encrypt_complete_s2c", EncryptCompleteS2CPacket.CODEC);
         register("data_added_s2c_packet", DataAddedC2SPacket.CODEC);
+        register("verify_purchase_c2s", VerifyPurchasePackets.VerifyPurchasePacketC2S.CODEC);
     }
 }
