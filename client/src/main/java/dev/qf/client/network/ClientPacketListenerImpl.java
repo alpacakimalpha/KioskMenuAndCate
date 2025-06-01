@@ -58,7 +58,7 @@ public class ClientPacketListenerImpl implements ClientPacketListener {
         }
 
         registry.addAll(packet.data());
-        DataReceivedEvent.EVENT.invoker().onRegistryChanged(registry);
+        DataReceivedEvent.EVENT.invoker().onRegistryChanged(this.handler, registry);
     }
 
     @Override

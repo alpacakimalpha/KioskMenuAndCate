@@ -1,5 +1,6 @@
 package common.event;
 
+import common.network.handler.SerializableHandler;
 import common.network.packet.Serializable;
 
 /**
@@ -7,11 +8,12 @@ import common.network.packet.Serializable;
  */
 @FunctionalInterface
 public interface PostPacketHandlingEvent {
-    Event<PostPacketHandlingEvent> EVENT = EventFactory.createArrayBacked(PostPacketHandlingEvent.class, listeners -> packet -> {
-        for (PostPacketHandlingEvent listener : listeners) {
-            listener.onPostPacketHandle(packet);
-        }
-    });
+    Event<PostPacketHandlingEvent> EVENT = EventFactory.createArrayBacked(PostPacketHandlingEvent.class, listeners ->
+            (handler, packet) -> {
+                for (PostPacketHandlingEvent listener : listeners) {
+                    listener.onPostPacketHandle(handler, packet);
+                }
+            });
 
-    void onPostPacketHandle(Serializable<?> packet);
+    void onPostPacketHandle(SerializableHandler handler, Serializable<?> packet);
 }
