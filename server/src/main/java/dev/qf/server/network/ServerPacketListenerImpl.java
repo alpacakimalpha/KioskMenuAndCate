@@ -98,6 +98,14 @@ public class ServerPacketListenerImpl implements ServerPacketListener {
     }
 
     @Override
+    public void onRequestVerify(VerifyPurchasePackets.VerifyPurchasePacketC2S packet) {
+        if (!this.handler.isEncrypted()) {
+            throw new IllegalStateException("Client is not encrypted");
+        }
+        // TODO IMPLEMENT PACKET HANDLING
+    }
+
+    @Override
     public SidedPacket.Side getSide() {
         return SidedPacket.Side.SERVER;
     }

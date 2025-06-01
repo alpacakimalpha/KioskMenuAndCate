@@ -1,6 +1,5 @@
 package common.util;
 
-import common.network.Serializable;
 import org.jetbrains.annotations.Nullable;
 
 public interface IndexIterable<T> extends Iterable<T> {
