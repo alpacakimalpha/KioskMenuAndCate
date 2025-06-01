@@ -1,17 +1,14 @@
 package dev.qf.client.network;
 
-import common.network.Serializable;
 import common.network.SynchronizeData;
 import common.network.encryption.NetworkEncryptionUtils;
 import common.network.handler.SerializableHandler;
 import common.network.handler.listener.ClientPacketListener;
-import common.network.packet.HelloS2CPacket;
-import common.network.packet.KeyC2SPacket;
-import common.network.packet.SidedPacket;
-import common.network.packet.UpdateDataPacket;
+import common.network.packet.*;
 import common.registry.Registry;
 import common.registry.RegistryManager;
 import common.util.KioskLoggerFactory;
+import dev.qf.client.event.DataReceivedEvent;
 import org.slf4j.Logger;
 
 import javax.crypto.Cipher;
@@ -50,6 +47,9 @@ public class ClientPacketListenerImpl implements ClientPacketListener {
 
     @Override
     public void onReceivedData(UpdateDataPacket.ResponseDataS2CPacket packet) {
+        if (!this.handler.isEncrypted()) {
+            throw new IllegalStateException("Client is not encrypted");
+        }
         logger.info("Received data : {}", packet.registryId());
         logger.info("data info : {}", packet);
         Registry<? extends SynchronizeData<?>> registry =  RegistryManager.getAsId(packet.registryId());
@@ -57,9 +57,20 @@ public class ClientPacketListenerImpl implements ClientPacketListener {
             logger.error("Received data from unknown registry : {}", packet.registryId());
         }
 
-        packet.data().forEach(data -> {
-            registry.add(data.getRegistryElementId(), data);
-        });
+        registry.addAll(packet.data());
+        DataReceivedEvent.EVENT.invoker().onRegistryChanged(registry);
+    }
+
+    @Override
+    public void onEncryptCompleted(EncryptCompleteS2CPacket packet) {
+        handler.send(new UpdateDataPacket.RequestDataC2SPacket("all"));
+    }
+
+    @Override
+    public void onVerifyPurchaseResult(VerifyPurchasePackets.VerifyPurchaseResultS2CPacket packet) {
+        if (!this.handler.isEncrypted()) {
+            throw new IllegalStateException("Client is not encrypted");
+        }
     }
 
     @Override

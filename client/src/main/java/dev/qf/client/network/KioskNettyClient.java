@@ -2,13 +2,12 @@ package dev.qf.client.network;
 
 import common.util.KioskLoggerFactory;
 import common.network.Connection;
-import common.network.Serializable;
+import common.network.packet.Serializable;
 import common.network.SerializableManager;
 import common.network.handler.SerializableHandler;
 import common.network.handler.factory.PacketListenerFactory;
 import common.network.packet.SidedPacket;
 import common.util.Container;
-import dev.qf.client.Main;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioIoHandler;
@@ -26,7 +25,7 @@ public final class KioskNettyClient implements Connection {
     private SerializableHandler handler;
 
     public KioskNettyClient() {
-        if (Main.INSTANCE != null) {
+        if (Container.get(Connection.class) != null) {
             throw new IllegalStateException("KioskNettyClient already initialized");
         }
         Container.put(Connection.class, this);
@@ -60,6 +59,11 @@ public final class KioskNettyClient implements Connection {
             CHANNEL.shutdownGracefully().syncUninterruptibly();
         }
         LOGGER.info("Client shutdown complete.");
+    }
+
+    @Override
+    public SidedPacket.Side getSide() {
+        return SidedPacket.Side.CLIENT;
     }
 
     @Override

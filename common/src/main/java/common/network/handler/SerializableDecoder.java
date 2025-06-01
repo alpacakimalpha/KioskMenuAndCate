@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import common.util.KioskLoggerFactory;
-import common.network.Serializable;
+import common.network.packet.Serializable;
 import common.network.SerializableManager;
 import common.network.encoding.StringEncodings;
 import common.util.JsonHelper;

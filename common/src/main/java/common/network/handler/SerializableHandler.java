@@ -2,7 +2,7 @@ package common.network.handler;
 
 import common.util.KioskLoggerFactory;
 import common.network.Connection;
-import common.network.Serializable;
+import common.network.packet.Serializable;
 import common.network.encryption.PacketDecryptor;
 import common.network.encryption.PacketEncryptor;
 import common.network.handler.factory.PacketListenerFactory;
@@ -76,8 +76,8 @@ public class SerializableHandler extends SimpleChannelInboundHandler<SidedPacket
 
     public void encrypt(Cipher encryptionCipher, Cipher decryptionCipher) {
         this.encrypted = true;
-        this.channel.pipeline().addBefore("decoder", "decrypt", new PacketDecryptor(decryptionCipher));
-        this.channel.pipeline().addBefore("encoder", "encrypt", new PacketEncryptor(encryptionCipher));
+        this.channel.pipeline().addBefore("splitter", "decrypt", new PacketDecryptor(decryptionCipher));
+        this.channel.pipeline().addBefore("prepender", "encrypt", new PacketEncryptor(encryptionCipher));
     }
 
     /**
@@ -88,7 +88,7 @@ public class SerializableHandler extends SimpleChannelInboundHandler<SidedPacket
     @Nullable
     public ChannelFuture send(Serializable<?> packet) {
         if (this.channel != null && this.channel.isOpen()) {
-            return this.channel.writeAndFlush(packet).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+            this.channel.writeAndFlush(packet);
         }
         return null;
     }

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import common.util.KioskLoggerFactory;
 import common.network.Connection;
-import common.network.Serializable;
+import common.network.packet.Serializable;
 import common.network.SerializableManager;
 import common.network.handler.SerializableHandler;
 import common.network.packet.SidedPacket;
@@ -88,6 +88,11 @@ public final class KioskNettyServer implements Connection {
             WORKER.shutdownGracefully().syncUninterruptibly();
         }
         LOGGER.info("Client shutdown complete.");
+    }
+
+    @Override
+    public SidedPacket.Side getSide() {
+        return SidedPacket.Side.SERVER;
     }
 
     @Override
