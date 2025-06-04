@@ -34,7 +34,7 @@ public class NetworkConnectionTest {
     }
 
     @Test
-    public void testPurchaseSerialization() throws InterruptedException {
+    public void testPurchaseSerialization() {
         Map<OptionGroup, Option> optionMap = new HashMap<>();
         optionMap.put(RegistryManager.OPTION_GROUPS.get(0), RegistryManager.OPTIONS.get(0));
         OrderItem item = new OrderItem(RegistryManager.MENUS.get(0), optionMap, 1);

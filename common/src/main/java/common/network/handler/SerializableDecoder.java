@@ -25,7 +25,7 @@ import java.util.List;
 @ApiStatus.Internal
 public class SerializableDecoder extends ByteToMessageDecoder {
     private static final Logger LOGGER = KioskLoggerFactory.getLogger();
-    public static Gson gson = new Gson();
+    public static final Gson gson = new Gson();
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         int i = in.readableBytes();

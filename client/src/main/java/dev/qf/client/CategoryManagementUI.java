@@ -24,7 +24,7 @@ public class CategoryManagementUI extends JFrame {
         initComponents();
         initEventHandlers();
         refreshCategories();
-        DataReceivedEvent.EVENT.register(data -> {
+        DataReceivedEvent.EVENT.register((handler, data) -> {
             if (!data.getClazz().equals(Category.class)) {
                 return;
             }
