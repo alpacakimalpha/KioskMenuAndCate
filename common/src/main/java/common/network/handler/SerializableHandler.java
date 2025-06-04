@@ -1,5 +1,6 @@
 package common.network.handler;
 
+import common.event.ChannelEstablishedEvent;
 import common.util.KioskLoggerFactory;
 import common.network.Connection;
 import common.network.packet.Serializable;
@@ -66,6 +67,7 @@ public class SerializableHandler extends SimpleChannelInboundHandler<SidedPacket
         this.channel = ctx.channel();
         this.packetListener = Container.get(PacketListenerFactory.class).getPacketListener(this);
         this.connection.onEstablishedChannel(ctx, this);
+        ChannelEstablishedEvent.EVENT.invoker().onChannelEstablished(this);
     }
 
     @Override
