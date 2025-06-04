@@ -1,5 +1,6 @@
 package dev.qf.client.network;
 
+import common.network.packet.UpdateDataPacket;
 import common.util.KioskLoggerFactory;
 import common.network.Connection;
 import common.network.packet.Serializable;
@@ -33,7 +34,7 @@ public final class KioskNettyClient implements Connection {
     }
 
     @Override
-    public void run() {
+    public ChannelFuture run() {
 
             bootstrap = new Bootstrap();
             bootstrap.group(CHANNEL);
@@ -43,7 +44,7 @@ public final class KioskNettyClient implements Connection {
 
             bootstrap.handler(this.initializeChannelInitializer(SidedPacket.Side.CLIENT));
 
-            bootstrap.connect("localhost", port).syncUninterruptibly().channel();
+            return bootstrap.connect("localhost", port).syncUninterruptibly();
     }
 
     public void shutdown() {
@@ -97,6 +98,11 @@ public final class KioskNettyClient implements Connection {
 
     public ChannelFuture connect(String host, int port) {
         return bootstrap.connect(host, port).syncUninterruptibly();
+    }
+
+    public void sendSyncPacket() {
+        LOGGER.info("Requesting All Synchronization items");
+        this.sendSerializable(new UpdateDataPacket.RequestDataC2SPacket("all"));
     }
 
     static {
