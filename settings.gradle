@@ -1,0 +1,4 @@
+rootProject.name = "CafeTeria-Kiosk"
+include ":common"
+include ":client"
+include ":server"
