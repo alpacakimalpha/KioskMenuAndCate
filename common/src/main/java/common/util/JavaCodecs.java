@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JavaCodecs {
-    public static Codec<Path> PATH = Codec.STRING.xmap(Path::of, Path::toString);
-    public static Codec<Byte[]> BYTE_ARRAY = Codec.BYTE.listOf().xmap(bytes -> bytes.toArray(new Byte[0]), Arrays::asList);
+    public static final Codec<Path> PATH = Codec.STRING.xmap(Path::of, Path::toString);
+    public static final Codec<Byte[]> BYTE_ARRAY = Codec.BYTE.listOf().xmap(bytes -> bytes.toArray(new Byte[0]), Arrays::asList);
     public static byte[] asByteArray(Byte[] bytes) {
         byte[] byteArray = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
