@@ -42,3 +42,44 @@ Pipeline은 크게 ByteBuffer를 어떻게 데이터로 치환할지에 대한 D
 
 ## API
 클라이언트에서 서버로 패킷을 보내는 방법을 서술한다 . 해당 방식은 client 모듈에서만 싫행되어야 함을 유의하라.
+<br><Br>
+```java
+KioskClient client = (KioskClient) Container.get(Connection.class);
+ChannelFuture future = client.sendSerializable(packet);
+```
+Serializable 의 목록은 [commons](/common/src/main/java/common/network/packet) 을 참조하라.
+
+## Event 등록
+
+```java
+import common.event.Event;
+import common.event.EventFactory;
+import common.network.handler.SerializableHandler;
+import common.registry.Registry;
+
+@FunctionalInterface
+public interface EventExample {
+    Event<EventExample> EVENT = EventFactory.createArrayBacked(EventExample.class, listeners -> (foo, bar) -> {
+        for (EventExample listener : listeners) {
+            listener.onTestTriggered(foo, bar);
+        }
+    });
+
+    void onTestTriggered(int foo, boolean bar);
+}
+```
+
+## Event 사용
+
+```java
+import common.event.EventExample;
+
+public void foo() {
+    EventExample.EVENT.register((foo, bar) -> {
+        // handle something
+    });
+}
+```
+
+예시는 [DataReceivedEvent](/client/src/main/java/dev/qf/./client/event/DataReceivedEvent.java)를 참고하라
+
