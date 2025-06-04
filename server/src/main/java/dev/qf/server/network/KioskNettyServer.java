@@ -48,7 +48,7 @@ public final class KioskNettyServer implements Connection {
     }
 
     @Override
-    public void run() {
+    public ChannelFuture run() {
         try {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.group(BOSS, WORKER);
@@ -60,11 +60,12 @@ public final class KioskNettyServer implements Connection {
 
             this.generateKeyPair();
 
-            serverBootstrap.bind(port).syncUninterruptibly().channel().closeFuture().sync();
+            return serverBootstrap.bind(port).syncUninterruptibly().channel().closeFuture().sync();
         } catch (Exception e) {
             LOGGER.error("Failed to start server.");
             LOGGER.error(e.getMessage());
             System.exit(1);
+            return null;
         }
     }
 

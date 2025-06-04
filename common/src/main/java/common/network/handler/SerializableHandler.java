@@ -1,5 +1,6 @@
 package common.network.handler;
 
+import common.event.ChannelEstablishedEvent;
 import common.util.KioskLoggerFactory;
 import common.network.Connection;
 import common.network.packet.Serializable;
@@ -45,7 +46,7 @@ public class SerializableHandler extends SimpleChannelInboundHandler<SidedPacket
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, SidedPacket s) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, SidedPacket s) {
         LOGGER.info(s.toString());
         if (s.getSide() == this.side) { // 이게 그렇게 쓸모 있는 코드가 아닌 것 같지만 아무튼.
             s.apply(packetListener);
@@ -55,7 +56,7 @@ public class SerializableHandler extends SimpleChannelInboundHandler<SidedPacket
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         LOGGER.error(cause.getMessage(), cause);
         ctx.close();
     }
@@ -66,6 +67,7 @@ public class SerializableHandler extends SimpleChannelInboundHandler<SidedPacket
         this.channel = ctx.channel();
         this.packetListener = Container.get(PacketListenerFactory.class).getPacketListener(this);
         this.connection.onEstablishedChannel(ctx, this);
+        ChannelEstablishedEvent.EVENT.invoker().onChannelEstablished(this);
     }
 
     @Override

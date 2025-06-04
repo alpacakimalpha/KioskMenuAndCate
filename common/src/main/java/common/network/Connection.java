@@ -14,14 +14,14 @@ import java.util.List;
  */
 @ApiStatus.NonExtendable
 public interface Connection {
-    void run();
+    ChannelFuture run();
     void shutdown();
     @ApiStatus.Internal
     default ChannelInitializer<Channel> initializeChannelInitializer(SidedPacket.Side side) {
         return new ChannelInitializer<>() {
 
             @Override
-            protected void initChannel(Channel ch) throws Exception {
+            protected void initChannel(Channel ch) {
                 try {
                     ch.setOption(ChannelOption.TCP_NODELAY, true);
                     ch.setOption(ChannelOption.SO_KEEPALIVE, true);

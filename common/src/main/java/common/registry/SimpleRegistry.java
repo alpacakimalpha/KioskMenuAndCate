@@ -45,7 +45,7 @@ public class SimpleRegistry<T extends SynchronizeData<?>> implements Registry<T>
     }
 
     @Override
-    public String getRegistryId() {
+    public @NotNull String getRegistryId() {
         return this.registryId;
     }
 
@@ -73,6 +73,9 @@ public class SimpleRegistry<T extends SynchronizeData<?>> implements Registry<T>
 
     @Override
     public T add(String id, SynchronizeData<?> entry) {
+        if (this.isFrozen()) {
+            throw new IllegalStateException("Registry is already frozen");
+        }
         if (!clazz.isAssignableFrom(entry.getClass())) {
             throw new IllegalArgumentException("Entry is not of type " + clazz.getName());
         }
@@ -92,6 +95,9 @@ public class SimpleRegistry<T extends SynchronizeData<?>> implements Registry<T>
 
     @Override
     public void addAll(List<SynchronizeData<?>> dataList) {
+        if (this.isFrozen()) {
+            throw new IllegalStateException("Registry is already frozen");
+        }
         try {
             lock.lock();
             dataList.forEach(data -> {
@@ -117,6 +123,23 @@ public class SimpleRegistry<T extends SynchronizeData<?>> implements Registry<T>
     @Override
     public List<T> getAll() {
         return ImmutableList.copyOf(this.ITEMS);
+    }
+
+    @Override
+    public void clear() {
+        if (this.isFrozen()) {
+            throw new IllegalStateException("Registry is already frozen");
+        }
+        lock.lock();
+        try {
+            this.ITEMS.clear();
+            this.entryToId.clear();
+            this.idToEntry.clear();
+            this.rawIndexToEntry.clear();
+            this.entryToRawIndex.clear();
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override

@@ -16,7 +16,7 @@ import javax.crypto.SecretKey;
 import java.security.PublicKey;
 
 public class ClientPacketListenerImpl implements ClientPacketListener {
-    private SerializableHandler handler;
+    private final SerializableHandler handler;
     private final Logger logger = KioskLoggerFactory.getLogger();
 
     public ClientPacketListenerImpl(SerializableHandler channel) {
@@ -37,8 +37,6 @@ public class ClientPacketListenerImpl implements ClientPacketListener {
         Cipher encrpytionCipher = NetworkEncryptionUtils.cipherFromKey(Cipher.ENCRYPT_MODE, secretKey);
         Cipher decryptionCipher = NetworkEncryptionUtils.cipherFromKey(Cipher.DECRYPT_MODE, secretKey);
 
-//        this.handler.send(); // TODO IMPLEMENT SEND PUBLIC KEY
-
         KeyC2SPacket secretPacket = new KeyC2SPacket(secretKey, publicKey, packet.nonce());
         logger.info("Client public key sent");
         this.handler.send(secretPacket);
@@ -55,9 +53,15 @@ public class ClientPacketListenerImpl implements ClientPacketListener {
         Registry<? extends SynchronizeData<?>> registry =  RegistryManager.getAsId(packet.registryId());
         if (registry == null) {
             logger.error("Received data from unknown registry : {}", packet.registryId());
+            return;
         }
-
-        registry.addAll(packet.data());
+        try {
+            registry.unfreeze();
+            registry.clear();
+            registry.addAll(packet.data());
+        } finally {
+            registry.freeze();
+        }
         DataReceivedEvent.EVENT.invoker().onRegistryChanged(this.handler, registry);
     }
 

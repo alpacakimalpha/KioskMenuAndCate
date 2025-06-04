@@ -19,7 +19,7 @@ public class SerializableEncoder extends MessageToByteEncoder<Serializable<?>> {
     private static final Logger LOGGER = KioskLoggerFactory.getLogger();
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, Serializable<?> msg, ByteBuf out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, Serializable<?> msg, ByteBuf out) {
             StringEncodings.encode(out, msg.toJson().toString(), 65535);
             int i = out.readableBytes();
             LOGGER.info("OUT : [{}] -> {} bytes", msg.getPacketId(), i);
