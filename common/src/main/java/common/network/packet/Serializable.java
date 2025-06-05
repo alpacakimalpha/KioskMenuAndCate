@@ -22,9 +22,9 @@ public interface Serializable<T> {
     <A extends T> A getValue();
     default JsonElement toJson() {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("packetId", getPacketId());
+        jsonObject.addProperty(PACKET_ID_PROPERTY, getPacketId());
         JsonElement dataValue = getCodec().encodeStart(JsonOps.INSTANCE, getValue()).getOrThrow();
-        jsonObject.add("data", dataValue);
+        jsonObject.add(DATA_PROPERTY, dataValue);
 
         return jsonObject;
     }

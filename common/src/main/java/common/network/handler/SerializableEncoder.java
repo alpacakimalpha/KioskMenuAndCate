@@ -20,7 +20,7 @@ public class SerializableEncoder extends MessageToByteEncoder<Serializable<?>> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, Serializable<?> msg, ByteBuf out) {
-            StringEncodings.encode(out, msg.toJson().toString(), 65535);
+            StringEncodings.encode(out, msg.toJson().toString(), 32767);
             int i = out.readableBytes();
             LOGGER.info("OUT : [{}] -> {} bytes", msg.getPacketId(), i);
     }

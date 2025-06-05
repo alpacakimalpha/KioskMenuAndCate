@@ -1,7 +1,7 @@
 
 ## Netty Pipeline
 
-<div style="text-align: center;"><img src="doc/default_netty_flow.png" width="300" height="500"/></div>
+<div style="text-align: center;"><img src="default_netty_flow.png" width="300" height="500"/></div>
 
 Netty의 기본 데이터 방식은 다음과 같다. <br>
 
@@ -29,7 +29,7 @@ Pipeline은 크게 ByteBuffer를 어떻게 데이터로 치환할지에 대한 D
 
 해당 프로젝트는 [공개 키 암호화 방식](https://namu.wiki/w/%EA%B3%B5%EA%B0%9C%ED%82%A4%20%EC%95%94%ED%98%B8%ED%99%94%20%EB%B0%A9%EC%8B%9D)을 채용했다. 통신은 다음과 같은 방식으로 암호화 된다.
 
-<div style="text-align: center"><img src="kiosk_cafeteria_encryption.png" width = "384", height="294"></div>
+<div style="text-align: center"><img src="kiosk_cafeteria_encryption.png" width = "384" height="294"></div>
 
 1. Client 가 서버와 접속된다. 이후, Client는 서버로 [HandShakeS2CPacket](/common/src/main/java/common/network/packet/HandShakeC2SInfo.java)를 전송한다. <br><br>
 2. 전송받은 서버는 [Nonce](https://www.ibm.com/docs/ko/was-nd/9.0.5?topic=services-nonce-randomly-generated-token)와 준비된 PublicKey를 인코드 한 형태로 [HelloS2CPacket](/common/src/main/java/common/network/packet/HelloS2CPacket.java)에 데이터를 담아 클라이언트를 전송한다.<br><br>
@@ -81,5 +81,45 @@ public void foo() {
 }
 ```
 
-예시는 [DataReceivedEvent](/client/src/main/java/dev/qf/./client/event/DataReceivedEvent.java)를 참고하라
+예시는 [DataReceivedEvent](/client/src/main/java/dev/qf/./client/event/DataReceivedEvent.java)를 참고하라.
+
+## Event 실행
+
+```java
+    public void doSomething() {
+        ExampleEvent.EVENT.invoker().onTriggered(foo, bar);
+    }
+```
+
+해당 코드를 통해 각 리스너들에 저장된 오퍼레이션이 실행된다.
+
+## 데이터 동기화와 데이터 수신 이벤트
+
+해당 프로젝트는 매 5분마다 메뉴, 카테고리, 옵션, 옵션 그룹을 동기화 한다.
+
+이는 [클라이언트 메인](/client/src/main/java/dev/qf/client/network/KioskNettyClient.java)에 로직이 작성되어있다.
+
+```java
+    public void sendSyncPacket() {
+        LOGGER.info("Requesting All Synchronization items");
+        this.sendSerializable(new UpdateDataPacket.RequestDataC2SPacket("all"));
+    }
+```
+
+데이터 동기화 요청은 [RequestDataC2SPacket](/common/src/main/java/common/network/packet/UpdateDataPacket.java) 를 서버로 보냄으로서 실행된다. 이 때 `RequestDataC2SPacket` 의 인수는 Registry의 ID값이어야 한다. 이는 `RegistryManager.데이터_레지스트리.getRegistryId()` 를 통해 얻을 수 있다.
+
+만약 Category 를 업데이트를 하려고 한다면
+
+```java
+    public void updateCategory() {
+        KioskNettyClient client = Main.INSTANCE;
+        client.sendSerializable(new UpdateDataPacket.RequestDataC2SPacket(RegistryManager.CATEGORY.getRegistryId()));
+    }
+```
+
+가 될 것이다.
+
+> [!WARNING]
+> 각 Registry는 의존성을 가지고 있다. 예시로, OptionGroup 은 Option 의 id만을 전송받기 때문에, 클라이언트에 Option 이 존재하지 않는다면 문제가 발생할 수도 있다. 이를 유의하여 데이터를 동기화 하라.
+
 
